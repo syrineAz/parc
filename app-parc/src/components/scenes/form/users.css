@@ -1,0 +1,89 @@
+.user-table {
+  width: 98%;
+  border-collapse: collapse;
+  border: 4px solid  #e0e0e0;
+  margin: 9px ;
+  margin-bottom: 50px;
+}
+  
+.user-table th {
+  background-color: #e0e0e0;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #7078fa;
+  border-bottom: 2px solid #e0e0e0;
+}  
+
+
+h1{
+  align-items: center;
+  text-align: center;
+}
+
+.user-table td {
+  padding: 5px;
+  border-bottom: 2px solid #e0e0e0;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.link{
+  color: #7078fa; 
+  text-decoration: none;
+  margin: 15px 5px;
+  text-align: 'right';
+  margin-top: 25px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.link:hover {
+  color: #7078fa;        
+}
+.user{
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 0px;
+  color: #151632;
+}
+@media screen and (max-width: 768px) {
+  .user-table th, .user-table td {
+    font-size: 16px;
+  }
+}
+.page-btnn {
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 10px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+  margin-left: 10px; 
+  float: right; 
+  margin-bottom: 20px;
+  text-decoration: none;
+  background-color: #bebebe;
+}
+
+.page-btnn.active {
+  background-color: #1b1c27;
+}
+
+.delete{
+  color: red;
+  background: white;
+  cursor: pointer;
+  border: none;
+  padding: 5px;
+ 
+}
+.reserver{
+  color: #0056b3;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 5px;
+
+}
