@@ -6,6 +6,8 @@ const ReservationModel= require('../../model/ReservationModel')
 const ReservationController= require('../../Controller/ReservationController')
 
 route.post('/reservation', ReservationController.addReservation);
+route.get('/AfficheReservation', ReservationController.getAllReservation);
+route.get('/AfficheDetailsReservation/:reservationId', ReservationController.getReservationDetails);
 
 
 module.exports = route;

@@ -6,15 +6,16 @@ import Sidebar from '../scenes/global/Sidebar.jsx';
 import Dashboard from '../scenes/dashboard/index';
 import {Routes ,Route} from 'react-router-dom';
 import Categorie from '../scenes/equipement/Categorie.jsx';
-import Reclamation from '../scenes/Reclamation/Reclamation.jsx';
+import Reclamation from '../scenes/ReclamationPageEmploye/Reclamation.jsx';
 import Bar from '../scenes/bar/index.jsx';
 import Pie from '../scenes/pie/index.jsx';
 import Line from '../scenes/line/index.jsx';
 import CardDetails from '../scenes/equipement/CardDetails.jsx'
 import EquipementEmployes from '../scenes/EquipementEmployes/EquipementEmployes.jsx'
-import Envoyer from '../scenes/Reclamation/Envoyer.jsx';
+import Envoyer from '../scenes/ReclamationPageEmploye/Envoyer.jsx';
 import Reservation from '../scenes/equipement/Reservation.jsx';
-import Liste from '../scenes/equipement/Liste.jsx';
+import Modifier from '../scenes/ReclamationPageEmploye/Modifier.jsx';
+import ListeReservation from '../scenes/equipement/ListeReservation.jsx';
 function User() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -45,18 +46,19 @@ function User() {
                 <Route path="/*" element={<Dashboard />} />
                 <Route path="/Reclamation/*" element={<Reclamation />} />
                 <Route path="/Reclamation/Envoyer" element={<Envoyer />} />
+                <Route path="/Reclamation/Modifier/:id" element={<Modifier />} />
 
                 <Route path="/Bar/*" element={<Bar />} />
                 <Route path="/Pie/*" element={<Pie />} />
                 <Route path="/Line/*" element={<Line />} />   
                 <Route path="/EquipementEmployes/*" element={<EquipementEmployes />} />   
+                <Route path="/ListeReservation/*" element={<ListeReservation />} />   
 
                 {user.role ==="employer"&&(       
                 <>
                   <Route path='/Categorie/*' element={<Categorie/>}/>
                   <Route path="/Categorie/:title/:id" element={<CardDetails />} />
                   <Route path='/Categorie/:title/:id/Reservation' element={<Reservation/>}/>
-                  <Route path='/Liste' element={<Liste/>}/>
 
                 </>
                 )} 

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit } from '@mui/icons-material'
+import { Pagination } from '@mui/material'
+
 function Users() {
   const [data, setData] = useState([])
   const {userid}= useParams()
@@ -29,7 +31,16 @@ function Users() {
     .catch(err => console.log(err))
   };
 
+  const [ItemPerPage]= useState(5)
+  const [currentPage, setCurrentPage]= useState(1)
   
+  const indexOfLastItem= currentPage * ItemPerPage;
+  const indexOfFirstItem = indexOfLastItem-ItemPerPage;
+  const currentItems= data.slice(indexOfFirstItem,indexOfLastItem) 
+  const handlePageChagne = (event, value)=>{
+    setCurrentPage(value)
+  }
+
   return (
     <div>
        <Link to="/AppHome/form" className="page-btnn">Ajouter un Employé</Link>
@@ -51,7 +62,7 @@ function Users() {
                 </tr>
             </thead>
             <tbody>
-                {Array.isArray(data) && data.map((user, index) =>{
+                {Array.isArray(data) && currentItems.map((user, index) =>{
                     return <tr key={index}>
                         <td>{user.name}</td>
                         <td>{user.email}</td>
@@ -63,8 +74,8 @@ function Users() {
                         <td>{user.actif}</td>
                         <td>
                           <Link to={`/AppHome/Form/Users/edit/${user.id}`} className='link'>
-                          <Edit />
-                        </Link> 
+                            <Edit />
+                          </Link> 
                         <button onClick={() => handleDelete(user.id)} className='delete'>
                           <DeleteIcon />
                         </button>
@@ -75,6 +86,14 @@ function Users() {
             </tbody>
         </table>
        </div>
+       <div className="paginationContainer">
+        <Pagination
+           count = {Math.ceil(data.length / ItemPerPage)}
+           page={currentPage}
+           onChange={handlePageChagne}
+           className='pagination-nav'
+        />
+      </div>
     </div>
   )
 }

@@ -1,0 +1,62 @@
+.reclamation-container {
+    padding: 20px;
+    font-family: 'Courier New';
+}
+ 
+.reclamation-list {
+    margin-top: 20px;
+}
+  
+.reclamation-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #e0e0e0;
+}
+  
+.reclamation-title {
+    cursor: pointer;
+    font-weight: bold;
+    color: #3da58a;
+    font-size: 15px;
+    text-transform: uppercase;
+    transition: font-size 0.3s ease;
+}
+.reclamation-title.clicked {
+    font-size: 24px;
+}
+.reclamation-details {
+    margin-top: 10px;
+    color: #232336;
+}
+  
+.delete-btn{
+    
+    padding: 5px 10px;
+    background-color: #97232f;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+  
+.edit-btn {
+    background-color: #3da58a;
+    padding: 15px 10px 5px 15px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+    color: #fff;
+}
+  
+.delete-btn:hover, .edit-btn:hover {
+    opacity: 0.8;
+}
+  
+.paginationContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; 
+}

@@ -90,7 +90,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  Icar Tech Hub
+                  InfoParc Manager
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -274,7 +274,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
 
             <Item
               title="Réservation "
-              to="/User/Liste"
+              to="/User/ListeReservation"
               icon={<EventIcon />}
               selected={selected}
               setSelected={setSelected}

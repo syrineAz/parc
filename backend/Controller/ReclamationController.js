@@ -16,9 +16,10 @@ const ReclamationController ={
           req.body.DescPanne,
           req.body.date,
         ];
-        console.log(values)
-        ReclamationModel.addReclamation(values)
+       // console.log(values)
+        ReclamationModel.addReclamation(values )
           .then(message => {
+            
             res.status(200).json({ message });
           })
           .catch(error => {
@@ -53,20 +54,23 @@ const ReclamationController ={
     }
 }
 
+
 io.on('connection', (socket) => {
   console.log('Client connected');
   
-  socket.on('nouvelle_reclamation_admin', (reclamation) => {//mta3 hedhi 
-    console.log('Nouvelle réclamation reçue :', reclamation);
+  socket.on('nouvelle_reclamation_admin', (reclamation ) => {//mta3 hedhi 
+    console.log('Nouvelle réclamation admin :', reclamation);
     const reclamationId = reclamation.reclamationId
 
     console.log('reclamationId', reclamationId)
-    const reclamationDataForAdmin = { ...reclamation, reclamationId ,type:'reclamation'};
+    const reclamationDataForAdmin = { ...reclamation,reclamationId ,type:'reclamation'};
     
-    io.emit('nouvelle_reclamation_admin', reclamationDataForAdmin)
+    io.emit('nouvelle_reclamation', reclamationDataForAdmin)
     console.log(reclamationDataForAdmin)
-  });  
-
+  });
+  
 });
+
+
 
 module.exports= ReclamationController;

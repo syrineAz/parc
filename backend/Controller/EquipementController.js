@@ -82,27 +82,9 @@ const EquipementController = {
       }
     },
   
-    addDetailsToEquipement: async (req, res) => {
-      try {
-        const { selectedItem, additionalFields } = req.body.data;
-        await EquipementModel.addDetails(selectedItem.id, additionalFields.name, additionalFields.value);
-        return res.status(200).send('Details added successfully');
-      } catch (error) {
-        console.error(error);
-        return res.status(500).send('Error adding details');
-      }
-    },
-  
-    deleteDetailsFromEquipement: async (req, res) => {
-      const idEquipement = req.params.idEquipement;
-      try {
-        await EquipementModel.deleteDetails(idEquipement);
-        return res.status(200).send('Equipement details deleted successfully');
-      } catch (error) {
-        console.error(error);
-        return res.status(500).send('Error deleting equipement details');
-      }
-    }
-  };
+   
+
+    
+};
 
 module.exports= EquipementController

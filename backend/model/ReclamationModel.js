@@ -1,10 +1,12 @@
+const { validate } = require('uuid');
 const db= require('../db')
-const {io} = require('../server')
+const {io} = require('../server');
+const { Socket } = require('socket.io');
 
 const ReclamationModel = {
-    addReclamation: (values) => {
+    addReclamation: (values  ) => {
       return new Promise((resolve, reject) => {
-        const insertReclamationQuery = "INSERT INTO reclamationuser (nameUser, emailUser, numUser, emplacement, nameEquipement, categorie, description, priorite, DescPanne, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const insertReclamationQuery = "INSERT INTO reclamationuser ( nameUser, emailUser, numUser, emplacement, nameEquipement, categorie, description, priorite, DescPanne, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const selectAdminIdQuery = "SELECT id FROM sign WHERE role = 'admin' ";
   
         db.query(insertReclamationQuery, values, (err, data) => {
@@ -13,7 +15,7 @@ const ReclamationModel = {
             reject("Erreur lors de l'ajout de la réclamation.");
           }
           const reclamationId = data.insertId; // Récupération de l'ID de la réclamation insérée
-          console.log("reclamationID:" , reclamationId)
+         // console.log("reclamationID:" , reclamationId)
           db.query(selectAdminIdQuery, (err, rows) => {
             if (err) {
               console.error(err);
@@ -22,11 +24,23 @@ const ReclamationModel = {
             if (rows.length > 0) {
               const adminId = rows[0].id;
               if (adminId) {
-                //const reclamation = {reclamation-Id}
-                const reclamationDataForAdmin = { reclamationId, ...values, type: 'reclamation' };
-                console.log('Data to emit:', reclamationDataForAdmin);
-                io.to(adminId).emit('nouvelle_reclamation_admin', reclamationDataForAdmin);
-                console.log(" reclamation envoyer:", reclamationDataForAdmin)
+                const reclamationToEmit = {
+                  nameUser: values[0],
+                  emailUser: values[1],
+                  numUser: values[2],
+                  emplacement: values[3],
+                  nameEquipement: values[4],
+                  categorie: values[5],
+                  description: values[6],
+                  priorite: values[7],
+                  DescPanne:values[8],
+                  date: values[9],
+                  reclamationId,
+                  type: 'reclamation'
+                };
+                //console.log(" data to emit:", reclamation)
+                  io.to(adminId).emit('nouvelle_reclamation_admin', reclamationToEmit);
+                  console.log(" data to emit:", reclamationToEmit)
                 resolve("Réclamation ajoutée avec succès.");
               } else {
                 console.error("ID de l'administrateur non trouvé.");

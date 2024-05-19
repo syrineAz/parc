@@ -1,6 +1,8 @@
 const db = require('../db');
+const DetailEquipementModel = require('./DetailEquipementModel');
 
 const EquipementModel = {
+
   addEquipement: (values) => {
     return new Promise((resolve, reject) => {
       const sql = "INSERT INTO equipement (NameEquipement, NameFournisseur, prix, Disponibilite, garantie, categorie, numSerie) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -43,7 +45,7 @@ const EquipementModel = {
     });
   },
 
-  deleteEquipement: (idEquipement) => {
+  /*deleteEquipement: (idEquipement) => {
     return new Promise((resolve, reject) => {
       const query = "DELETE FROM equipement WHERE idEquipement = ?";
       db.query(query, [idEquipement], (err, result) => {
@@ -52,6 +54,27 @@ const EquipementModel = {
           reject("Error deleting equipement");
         } else {
           resolve("Equipement deleted successfully");
+        }
+      });
+    });
+  },*/
+
+  deleteEquipement: (equipementId) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'DELETE FROM equipement WHERE idEquipement = ?';
+      db.query(sql, [equipementId], async (err, result) => {
+        if (err) {
+          console.error(err);
+          reject("Error deleting equipement");
+        } else {
+          // Supprimer les détails associés dans modal_detail
+          try {
+            await DetailEquipementModel.deleteDetailsByEquipementId(equipementId);
+            resolve("Equipement and details deleted successfully");
+          } catch (error) {
+            console.error(error);
+            reject("Error deleting equipement details");
+          }
         }
       });
     });
@@ -83,22 +106,9 @@ const EquipementModel = {
         }
       });
     });
-  },
+  }
 
-  addDetails: (itemId, fieldName, fieldValue) => {
-    return new Promise((resolve, reject) => {
-      const sql = "INSERT INTO modal_details (itemId, fieldName, fieldValue) VALUES (?, ?, ?)";
-      db.query(sql, [itemId, fieldName, fieldValue], (err, result) => {
-        if (err) {
-          console.error(err);
-          reject("Error adding details");
-        } else {
-          resolve("Details added successfully");
-        }
-      });
-    });
-  },
-
+ 
 };
 
 module.exports = EquipementModel;

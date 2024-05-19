@@ -39,7 +39,7 @@ const Topbar = () => {
       setNotifications((prevNotifications)=> [...prevNotifications , {...reservation, type:'reservation'}])
     })
     return ()=>{
-      socket.off('nouvelle_reclamation_admin')
+      socket.off('nouvelle_reclamation')
       socket.off('nouvelle_reservation_admin')
     }
   },[])
@@ -83,10 +83,10 @@ const Topbar = () => {
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
       >
-        <InputBase sx={{ ml: 10, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1.5 }}>
+       {  /* <InputBase sx={{ ml: 10, flex: 1 }} placeholder="Search" />
+      <IconButton type="button" sx={{ p: 1.5 }}>
           <SearchIcon /> 
-        </IconButton> 
+       </IconButton> */}
       </Box>
 
       {/* ICONS */}

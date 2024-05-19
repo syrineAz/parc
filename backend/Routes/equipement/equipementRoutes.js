@@ -2,18 +2,45 @@ const express = require('express')
 const route = express.Router();
 const db = require('../../db')
 const EquipementController = require('../../Controller/EquipementController')
-const EquipementModel= require('../../model/EquipementModel')
+const EquipementModel= require('../../model/EquipementModel');
+const DetailEquipementController = require('../../Controller/DetailEquipementController');
 
 route.post('/equipement',EquipementController.addEquipement);
 route.get('/ListeEquipement/:id/:title',EquipementController.getAllEquipements);
-route.delete('/delete/:id', EquipementController.deleteEquipement)
+route.delete('/DeleteEquipement/:id', EquipementController.deleteEquipement)
 route.post('/EditEquipement/:item_idEquipement',EquipementController.updateEquipement)
 route.get('/AfficheEditEquipement/:title', EquipementController.getEquipementsByCategory)
-route.post('/DetailsEquipement',EquipementController.addDetailsToEquipement)
-route.delete('/DeleteDetailsEquipement/:idEquipement',EquipementController.deleteDetailsFromEquipement)
+//route.post('/DetailsEquipement',DetailEquipementController.addDetailsToEquipement)
+route.delete('/equipement/:equipementId/Deletedetail/:itemId', DetailEquipementController.deleteDetailsFromEquipement);
 
+
+route.post('/DetailsEquipement', async (req, res)=>{
+    try{
+        const {selectedItem , additionalFields} =req.body.data 
+        const itemId= selectedItem.idEquipement
+        if(!Array.isArray(additionalFields)){
+            throw new Error ('additonalFields n\'est pas un tableau ')
+        }
+      //  console.log(additionalFields)
+        await Promise.all(additionalFields.map(async (field)=>{
+            try{
+                const response = await db.query('INSERT INTO modal_details (itemId, fieldName, fieldValue) VALUES (?, ?, ?)', [itemId, field.name, field.value]);
+               // console.log(response)
+            }
+            catch(error){
+                console.error(error)
+                throw new Error('Erreur lors de l\'insertion')
+            }
+        }));
+        res.status(200).send('détails ajouter avec succès')
+    }catch(error){
+        console.error(error)
+        res.status(500).send('error dans l\'insertion des details' )
+    }
+})
 
 module.exports = route;
+
 /*
 route.post('/equipement', (req, res) =>{
     const values = [
@@ -120,30 +147,6 @@ route.get('/AfficheEditEquipement/:title', (req,res)=>{
 
 
 /*
-route.post('/DetailsEquipement', async (req, res)=>{
-    try{
-        const {selectedItem , additionalFields} =req.body.data 
-        const itemId= selectedItem.id
-        if(!Array.isArray(additionalFields)){
-            throw new Error ('additonalFields n\'est pas un tableau ')
-        }
-      //  console.log(additionalFields)
-        await Promise.all(additionalFields.map(async (field)=>{
-            try{
-                const response = await db.query('INSERT INTO modal_details (itemId, fieldName, fieldValue) VALUES (?, ?, ?)', [selectedItem.id, field.name, field.value]);
-               // console.log(response)
-            }
-            catch(error){
-                console.error(error)
-                throw new Error('Erreur lors de l\'insertion')
-            }
-        }));
-        res.status(200).send('détails ajouter avec succès')
-    }catch(error){
-        console.error(error)
-        res.status(500).send('error dans l\'insertion des details' )
-    }
-})
 
 route.post('/DetailsEquipement', async (req, res) => {
     try {

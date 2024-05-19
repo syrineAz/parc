@@ -13,35 +13,15 @@ import { TextareaAutosize } from "@mui/material";
 import io from 'socket.io-client'
 const socket = io('http://localhost:3000')
 import { toast } from 'react-toastify';
-
-function Envoyer() {
+function Modifier() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate= useNavigate();
-
   const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
-    try{
-      const response = await axios.post('http://localhost:8081/reclamationUser', values)
-      if(response.status===200){
-        console.log(response.data);
-        setSubmitting(false);
-       // navigate('/User/Reclamation')
-        toast.success('Réclamation envoyée avec succès')
-      }else {
-        throw new Error("Unknown response from server");
-      }
-     socket.emit('nouvelle_reclamation_admin', values)  
-      console.log('values ',values)
-    }catch(err){
-      console.error(err)
-      setErrors({ form: 'Error in the form' , err});
-    }
+    
   };
-
-
-
   return (
     <Box m="20px"  >
-    <Header title="Ajouter une Réclamation" subtitle="  " />
+    <Header title="Modifier une Réclamation" subtitle="  " />
     <Box display="flex" style={{ display: 'flex', alignItems: 'center' }}>
       
     </Box>
@@ -285,4 +265,5 @@ const initialValues = {
 };
 
 
-export default Envoyer
+
+export default Modifier

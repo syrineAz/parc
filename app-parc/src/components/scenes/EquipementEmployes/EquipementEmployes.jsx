@@ -4,10 +4,14 @@ import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit, WavingHand } from '@mui/icons-material'
 import {BiBookAdd} from 'react-icons/bi'
+import { Pagination } from '@mui/material'
+import DetailsEquipementEmploye from './DetailsEquipementEmploye';
 function EquipementEmployes() {
 
   const [data, setData] = useState([])
   const [user, setUser] = useState("");
+  const [showModal, setShowModal] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
   useEffect(()=>{
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUser(userData);
@@ -46,19 +50,34 @@ function EquipementEmployes() {
     .catch(err => console.log(err))
   };
   
-  const openModal = (item) => {
-    setSelectedItem(item);
-    setSelectedCategory(item.categorie);
+  const openModal = (equipement) => {
+    setSelectedItem(equipement);
     setShowModal(true);
   };
   const closeModal = () => {
     setShowModal(false);
+    setSelectedItem(null)
+  };
+  const handleSave = (fields) => {
+    const updatedData = data.map(equipement => {
+      if (equipement.id === selectedItem.id) {
+        return { ...equipement, customFields: fields };
+      }
+      return item;
+    });
+    setData(updatedData);
   };
 
 
-  const [nbPage]= useState(10)
+  const [ItemPerPage]= useState(5)
+  const [currentPage, setCurrentPage]= useState(1)
   
-
+  const indexOfLastItem= currentPage * ItemPerPage;
+  const indexOfFirstItem = indexOfLastItem-ItemPerPage;
+  const currentItems= data.slice(indexOfFirstItem,indexOfLastItem) 
+  const handlePageChagne = (event, value)=>{
+    setCurrentPage(value)
+  }
   return (
     <div>
       {user.role ==="admin" &&( 
@@ -83,7 +102,7 @@ function EquipementEmployes() {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(data) && data.map((equipement , index)=>{
+            {Array.isArray(data) && currentItems.map((equipement , index)=>{
               return <tr key={index}>
                 <td>{equipement.nomEmploye}</td>
                 <td>{equipement.emailEmploye}</td>
@@ -91,11 +110,11 @@ function EquipementEmployes() {
                 <td>{equipement.numSerie}</td>
                 <td>{equipement.categorie}</td>
                 <td>
-                  <Link onClick={()=>openModal(item)} className='link'>Détails</Link>
+                  <Link onClick={()=>openModal(equipement)} className='link'>Détails</Link>
                 </td>
                 {user.role ==="admin" && (
                     <td>
-                      <Link to={`/AppHome/EquipementEmployes/Modifier/${equipement.id}`}className='link'>
+                      <Link to={`/AppHome/EquipementEmployes/Modifier/${equipement.id}`} className='link'>
                         <Edit />
                       </Link>
                       <button onClick={() => handleDelete(equipement.id)} className='delete'>
@@ -108,6 +127,23 @@ function EquipementEmployes() {
           </tbody>
         </table>
       </div>
+      <div className="paginationContainer">
+        <Pagination
+           count = {Math.ceil(data.length / ItemPerPage)}
+           page={currentPage}
+           onChange={handlePageChagne}
+           className='pagination-nav'
+        />
+      </div>
+      {showModal && (
+      <DetailsEquipementEmploye 
+        isOpen={showModal} 
+        closeModal={closeModal}
+        selectedItem={selectedItem}
+        onSave={handleSave}
+      />
+      )}
+
     </div>
   )
 }

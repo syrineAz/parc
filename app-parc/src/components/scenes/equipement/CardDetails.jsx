@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit, WavingHand } from '@mui/icons-material'
 import {BiBookAdd} from 'react-icons/bi'
 import { toast } from 'react-toastify';
+import { Pagination } from '@mui/material'
 
 function CardDetails() {
   const { title, id } = useParams();
@@ -72,17 +73,10 @@ function CardDetails() {
   };
 
 
-  const handleRemoveField = (index) => {
-    if (Array.isArray(prevFields)){
-
-    
-    setAdditionalFields(prevFields => prevFields.filter((_, i) => i !== index));
-    }
-  };
    
   const handleDelete = async (idEquipement) =>{
     try{
-      const response= await axios.delete(`http://localhost:8081/DeleteDetailsEquipement/${idEquipement}`)
+      const response= await axios.delete(`http://localhost:8081/DeleteEquipement/${idEquipement}`)
       if(response.status == 200){
         setData(prevData => prevData.filter(item => item.id !== idEquipement))
         toast.success('Equipement supprimer')
@@ -91,6 +85,18 @@ function CardDetails() {
       console.log(error)
     }
   }
+
+
+  const [ItemPerPage]= useState(5)
+  const [currentPage, setCurrentPage]= useState(1)
+  
+  const indexOfLastItem= currentPage * ItemPerPage;
+  const indexOfFirstItem = indexOfLastItem-ItemPerPage;
+  const currentItems= filteredData.slice(indexOfFirstItem,indexOfLastItem) 
+  const handlePageChagne = (event, value)=>{
+    setCurrentPage(value)
+  }
+  
 
   return (
     <div>
@@ -119,8 +125,9 @@ function CardDetails() {
               </tr>
             </thead>
             <tbody className='body'>
-              {filteredData.map((item) => (
+              {currentItems.map((item) => (
                 <tr key={item.idEquipement}>
+                
                   <td>{item.NameEquipement}</td>
                   <td>{item.numSerie}</td>
                   <td>{item.NameFournisseur}</td>
@@ -154,11 +161,19 @@ function CardDetails() {
           //handleInput={handleInput}
           additionalFields={additionalFields[selectedItem.id]}
           setAdditionalFields={(fields) => setAdditionalFields({ ...additionalFields, [selectedItem.id]: fields })} handleAddField={handleAddField}
-          handleRemoveField={handleRemoveField}
+        ///  handleRemoveField={handleRemoveField}
           title={selectedItem}
           initialFields={initialFields}
         />
       )}
+      <div className="paginationContainer">
+        <Pagination
+           count = {Math.ceil(data.length / ItemPerPage)}
+           page={currentPage}
+           onChange={handlePageChagne}
+           className='pagination-nav'
+        />
+      </div>
     </div>
   )
 }

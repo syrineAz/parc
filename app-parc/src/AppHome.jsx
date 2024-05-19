@@ -23,8 +23,8 @@ import CardDetails from './components/scenes/equipement/CardDetails.jsx';
 import EquipementEmployes from './components/scenes/EquipementEmployes/EquipementEmployes.jsx'
 import Ajouter from './components/scenes/EquipementEmployes/Ajouter.jsx';
 import Modifier from './components/scenes/EquipementEmployes/Modifier.jsx';
-import Reclamation from './components/scenes/Notification/Reclamation.jsx';
-import Reservation from './components/scenes/reservation/Reservation.jsx';
+import Reclamation from './components/scenes/NotificationPageAdmin/Reclamation.jsx';
+import Reservation from './components/scenes/reservationPageAdmin/Reservation.jsx';
 function AppHome() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);

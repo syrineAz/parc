@@ -22,7 +22,7 @@ function Reservation() {
         if(response.status===200){
           console.log(response.data);
           setSubmitting(false);
-         // navigate('/User/Liste')
+          navigate('/User/ListeReservation')
           toast.success('Résevation envoyée avec succès')
         }else {
           throw new Error("Unknown response from server");
@@ -102,7 +102,7 @@ function Reservation() {
                 onChange={handleChange}
                 value={values.NumSerie}
                 name="NumSerie"
-                error={!!touched.NumSerie && !!errors.nuNumSeriem}
+                error={!!touched.NumSerie && !!errors.NumSerie}
                 helperText={touched.NumSerie && errors.NumSerie}
                 sx={{ gridColumn: "span 4" }}
               />

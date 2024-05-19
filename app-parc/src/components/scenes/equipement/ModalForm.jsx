@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditionalFields, handleRemoveField, initialFields }) {
+function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditionalFields, initialFields }) {
   const [customFieldName, setCustomFieldName] = useState('');
   const [customFieldValue, setCustomFieldValue] = useState('');
 
@@ -17,12 +17,12 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
   };
 
   useEffect(()=>{
-    const savedFields =JSON.parse(localStorage.getItem(`equipement_${selectedItem.id}`))
+    const savedFields =JSON.parse(localStorage.getItem(`equipement_${selectedItem.idEquipement}`))
     console.log(savedFields)
     if(savedFields){
       setAdditionalFields(savedFields)
     }
-  },[selectedItem.id])
+  },[selectedItem.idEquipement])
 
   const handleAddCustomField = () => {
     if (customFieldName.trim() !== '') {
@@ -34,7 +34,7 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
         setAdditionalFields(updatedFields);
         setCustomFieldName('');
         setCustomFieldValue('');
-        localStorage.setItem(`equipement_${selectedItem.id}`, JSON.stringify(updatedFields))
+        localStorage.setItem(`equipement_${selectedItem.idEquipement}`, JSON.stringify(updatedFields))
       }else{
         toast.error('Ce champ existe déjà  ')
       }
@@ -79,7 +79,30 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
       }));
     }
   };
+
+
+  const {idEquipement, itemId}= useParams()
+  const handleRemoveField = async (index)=>{
+    try {
+      const response = await axios.delete(`http://localhost:8081/equipement/${idEquipement}/Deletedetail/${itemId}`);
+      if (response.status === 200) {
+       toast.success('Détail supprimé avec succès');
+      // Supprimer du state additionalFields
+      const updatedFields = [...additionalFields];
+      updatedFields.splice(index, 1);
+      setAdditionalFields(updatedFields);
+      // Mettre à jour le localStorage après la suppression
+      localStorage.setItem(`equipement_${selectedItem.idEquipement}`, JSON.stringify(updatedFields));
+      // Effacer la clé spécifique du localStorage
+      localStorage.removeItem(`equipement_${selectedItem.idEquipement}`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression du détail :', error);
+      
+    }
   
+  }
+
   const [user, setUser] = useState("");
    useEffect(()=>{
     const userData = JSON.parse(localStorage.getItem('userData'));
