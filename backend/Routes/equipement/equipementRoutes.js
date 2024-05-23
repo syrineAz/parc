@@ -12,6 +12,7 @@ route.post('/EditEquipement/:item_idEquipement',EquipementController.updateEquip
 route.get('/AfficheEditEquipement/:title', EquipementController.getEquipementsByCategory)
 //route.post('/DetailsEquipement',DetailEquipementController.addDetailsToEquipement)
 route.delete('/equipement/:equipementId/Deletedetail/:itemId', DetailEquipementController.deleteDetailsFromEquipement);
+route.post('/equipement/:idEquipement/Updatedetail/:itemId', DetailEquipementController.updateDetailInEquipement);
 
 
 route.post('/DetailsEquipement', async (req, res)=>{
@@ -22,17 +23,22 @@ route.post('/DetailsEquipement', async (req, res)=>{
             throw new Error ('additonalFields n\'est pas un tableau ')
         }
       //  console.log(additionalFields)
+      let insertedIds= []
         await Promise.all(additionalFields.map(async (field)=>{
             try{
                 const response = await db.query('INSERT INTO modal_details (itemId, fieldName, fieldValue) VALUES (?, ?, ?)', [itemId, field.name, field.value]);
-               // console.log(response)
+                console.log(response.data)
+                const insertedId = response.insertId;
+                console.log(insertedId)
+                insertedIds.push(insertedId);
+
             }
             catch(error){
                 console.error(error)
                 throw new Error('Erreur lors de l\'insertion')
             }
         }));
-        res.status(200).send('détails ajouter avec succès')
+        res.status(200).send({message: 'détails ajouter avec succès', insertedIds})
     }catch(error){
         console.error(error)
         res.status(500).send('error dans l\'insertion des details' )
@@ -42,6 +48,11 @@ route.post('/DetailsEquipement', async (req, res)=>{
 module.exports = route;
 
 /*
+
+const generateUniqueId = () => {
+  return '_' + Math.random().toString(36).substr(2, 9); // Utilisation d'une méthode simple pour la génération d'identifiant unique
+};
+
 route.post('/equipement', (req, res) =>{
     const values = [
         req.body.NameEquipement,

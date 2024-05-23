@@ -1,69 +1,58 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, MenuItem } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom"
-import { ListItemIcon, Typography } from '@mui/material';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import MenuItem from '@mui/material/MenuItem';
-import { useParams } from 'react-router-dom';
-import { toast } from "react-toastify";
-
+import {  useParams } from "react-router-dom";
+import { toast } from "react-toastify" ;
+import { useNavigate } from "react-router-dom";
 const Equipement = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { title, id } = useParams();
- 
+  const navigate = useNavigate();
+
   const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
-    console.log(values)
+    //console.log("Form submitted with values: ", values);
     try {
-        if (!values.NameEquipement || !values.NameFournisseur || !values.prix || !values.fournisseur || !values.numSerie ||!values.categorie  ) {
-            setErrors({ form: 'All fields are required' });
-            return;
-        }
-        const response = await axios.post("http://localhost:8081/equipement", values);
-        if (response.status === 200) {
-            if (response.data === "equipement added succesfully") {
-                console.log(response.data);
-                setSubmitting(false);
-                navigate(`/AppHome/Categorie/${title}/${id}`)
-                toast.success('équipement ajouter avec succès')
-            } else {
-                throw new Error("Unknown response from server");
-            }
-        } else if (response.status === 400 && response.data === "equipement already exists") {
-            setErrors({ form: 'equipement already exists' });
-            toast.error('equipement déjà existe')
-        } 
-    } catch (error) {
-      if (error.response && error.response.status === 400 && error.response.data === "equipement already exists") {
-          setErrors({ form: 'equipement already exists' });
-          toast.error('equipement déjà existe')
+      if (!values.NameEquipement || !values.NameFournisseur || !values.prix || !values.numSerie || !values.categorie) {
+        setErrors({ form: 'All fields are required' });
+        return;
+      }
+      const response = await axios.post("http://localhost:8081/equipement", values);
+      console.log("Response from backend: ", response);
+      if (response.status === 200) {
+        if (response.data === "equipement added succesfully") {
+          console.log("Equipement added successfully");
+          setSubmitting(false);
+          navigate(`/AppHome/Categorie/${title}/${id}`);
+          toast.success('Équipement ajouté avec succès');
         } else {
-          setErrors({ form: 'Error in the form' });
+          throw new Error("Unknown response from server");
+        }
+      } else if (response.status === 400 && response.data === "equipement already exists") {
+        setErrors({ form: 'Equipement already exists' });
+        toast.error('Équipement déjà existe');
+      }
+    } catch (error) {
+      console.error("Error submitting form: ", error);
+      if (error.response && error.response.status === 400 && error.response.data === "equipement already exists") {
+        setErrors({ form: 'Equipement already exists' });
+        toast.error('Équipement déjà existe');
+      } else {
+        setErrors({ form: 'Error in the form' });
       }
     }
   };
 
-  
-
-
-  const navigate= useNavigate();
-  
   return (
-    
-    <Box m="20px"  >
-      <Header title="Ajouter un equipement"  />
-      <Box display="flex" style={{ display: 'flex', alignItems: 'center' }}>
-        
-      </Box>
+    <Box m="20px">
+      <Header title="Ajouter un equipement" />
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
         validationSchema={checkoutSchema}
       >
-
         {({
           values,
           errors,
@@ -95,7 +84,7 @@ const Equipement = () => {
                 helperText={touched.NameEquipement && errors.NameEquipement}
                 sx={{ gridColumn: "span 4" }}
               />
-             <TextField
+              <TextField
                 fullWidth
                 variant="filled"
                 type="text"
@@ -147,7 +136,7 @@ const Equipement = () => {
                 helperText={touched.Disponibilite && errors.Disponibilite}
                 sx={{ gridColumn: "span 4" }}
               />
-             <TextField
+              <TextField
                 fullWidth
                 variant="filled"
                 type="text"
@@ -160,9 +149,8 @@ const Equipement = () => {
                 helperText={touched.garantie && errors.garantie}
                 sx={{ gridColumn: "span 4" }}
               />
-              
               <TextField
-                select 
+                select
                 fullWidth
                 variant="filled"
                 type="text"
@@ -173,7 +161,8 @@ const Equipement = () => {
                 name="categorie"
                 error={!!touched.categorie && !!errors.categorie}
                 helperText={touched.categorie && errors.categorie}
-                sx={{ gridColumn: "span 4" }}> 
+                sx={{ gridColumn: "span 4" }}
+              >
                 <MenuItem value="Les Ordinateurs">Les Ordinateurs </MenuItem>
                 <MenuItem value="Réseaux et communication">Réseaux et communication</MenuItem>
                 <MenuItem value="Périphériques de stockage">Périphériques de stockage</MenuItem>
@@ -192,40 +181,29 @@ const Equipement = () => {
         )}
       </Formik>
     </Box>
-    
   );
 };
 
-
 const checkoutSchema = yup.object().shape({
   NameEquipement: yup.string().required("required"),
-  prix: yup
-    .string()
-    .required("required"),
-  NameFournisseur: yup
-    .string()
-    .required("required"),  
-  Disponibilite: yup
-    .string()
-    .required(),
-  garantie : yup
-    .string()
-    .required(),
-  categorie: yup
-    .string()
-    .required(),
-  numSerie: yup
-    .string()
-    .required() 
+  prix: yup.string().required("required"),
+  NameFournisseur: yup.string().required("required"),
+  Disponibilite: yup.string().required(),
+  garantie: yup.string().required(),
+  categorie: yup.string().required(),
+  numSerie: yup.string().required(),
 });
+
 const initialValues = {
   NameEquipement: "",
   NameFournisseur: "",
   prix: "",
-  Disponibilite:"",
-  garantie:"",
-  categorie:"",
-  numSerie:"",
+  Disponibilite: "",
+  garantie: "",
+  categorie: "",
+  numSerie: "",
 };
+
 export default Equipement;
+
 

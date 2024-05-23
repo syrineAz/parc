@@ -25,6 +25,7 @@ import Ajouter from './components/scenes/EquipementEmployes/Ajouter.jsx';
 import Modifier from './components/scenes/EquipementEmployes/Modifier.jsx';
 import Reclamation from './components/scenes/NotificationPageAdmin/Reclamation.jsx';
 import Reservation from './components/scenes/reservationPageAdmin/Reservation.jsx';
+import ModalForm from './components/scenes/equipement/ModalForm.jsx';
 function AppHome() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -72,12 +73,13 @@ function AppHome() {
                 <Route path='/Form/Users/Edit/:userid' element={<Edit/>}/>   
                 <Route path="/Contacts/Fournisseur" element={<Fournisseur />} />
                 <Route path='/Contacts/Fournisseur/EditFournisseur/:userid' element={<EditFournisseur/>}/>   
-                <Route path='/Categorie/:title/:id/EditEquipement/:item_id' element={<EditEquipement/>} />
+                <Route path='/Categorie/:title/:id/EditEquipement/:item_idEquipement' element={<EditEquipement/>} />
+
                 <Route path="/EquipementEmployes/*" element={<EquipementEmployes />} />
                 <Route path="/EquipementEmployes/Ajouter" element={<Ajouter />} />
                 <Route path="/EquipementEmployes/Modifier/:id" element={<Modifier />} />
-                <Route path="/Reclamation/:reclamationId" element={<Reclamation />} />
-                <Route path="/Reservation/:reservationId" element={<Reservation />} />
+                <Route path="/Reclamation/*" element={<Reclamation />} />
+                <Route path="/Reservation/*" element={<Reservation />} />
 
               </Routes>
             </main>

@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit } from '@mui/icons-material'
 import '../ReclamationPageEmploye/reclamation.css'
 import { Pagination } from '@mui/material'
-
+import { toast } from 'react-toastify'; 
 function ListeReservation() {
   const [data, setData] = useState([])
   const [userReservation, setUserReservation] = useState([])
@@ -30,7 +30,7 @@ function ListeReservation() {
     if(user && user.email){
       const filtredReservation = data.filter(reservation=> reservation.email === user.email)
       setUserReservation(filtredReservation)
-      console.log(filtredReservation)
+      //console.log(filtredReservation)
     }
     
   },[data, user]) 
@@ -39,15 +39,21 @@ function ListeReservation() {
     setUserReservation(userReservation.map((reservation, i) => (
       i === index ? { ...reservation, showDetails: !reservation.showDetails } : reservation
     )));
-    console.log(reservation)
-    console.log(userReservation)
+    
   };
 
-  const handleDelete = ()=>{
-
+  const handleDelete = async (id)=>{
+    try{
+      const response= await axios.delete(`http://localhost:8081/deleteReservation/${id}`)
+      if( response.status===200){
+        const updateReservation= userReservation.filter(reservation=>reservation.id !== id)
+        setUserReservation(updateReservation)
+        toast.success('Réservation suprrimée avec succès')
+      }
+    }catch(error){
+      console.log(error)
+    }
   }
-
-
 
   const indexOfLastReservation= currentPage * reservationPerPage;
   const indexOfFirstReservation = indexOfLastReservation-reservationPerPage;
@@ -64,6 +70,10 @@ function ListeReservation() {
     })))
   }
 
+  useEffect(() => {
+    resetShowDetails(); // Reset details when currentPage changes
+  }, [currentPage]);
+
   return (
     <div className="reclamation-container">
         <h1>Votre liste des réservations</h1>
@@ -77,20 +87,24 @@ function ListeReservation() {
               </p>
               {reservation.showDetails && (
                 <div className="reclamation-details">
+                  <p>Numéro de réservation: {reservation.id}</p>
                   <p>Email: {reservation.email}</p>
                   <p>Numéro de série: {reservation.NumSerie}</p>
                   <p>Nom de l'équipement: {reservation.nameEquipement}</p>
                   <p>Catégorie: {reservation.categorie}</p>
-                
-                    
-                      <Link to={`/User/Reclamation/Modifier/${reservation.id}`} className="edit-btn">
+                  <p>Résultat: {reservation.etat}</p>  
+                  {
+                  reservation.etat ==='En attente' && (
+                    <>
+                      <Link to={`/User/ListeReservation/ModifierReservation/${reservation.id}`} className="edit-btn">
                         <Edit />
                       </Link>
                       <button onClick={() => handleDelete(reservation.id)} className="delete-btn">
                         <DeleteIcon />
                       </button> 
-                    
-                  
+                    </>  
+                  )
+                  } 
                 </div>
               )}
             </div>

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom"
+import {Link, useNavigate, useParams} from "react-router-dom"
 import { ListItemIcon, Typography } from '@mui/material';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,10 +15,41 @@ const socket = io('http://localhost:3000')
 import { toast } from 'react-toastify';
 function Modifier() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const navigate= useNavigate();
-  const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
+  const [reclamation, setReclamation]= useState(null)
+  const {id}= useParams()
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8081/Affichereclamations");
+        const reclamation = response.data.find(reclamation => reclamation.id === parseInt(id));
+        setReclamation(reclamation);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserData();
+  }, [id]);
+  const handleFormSubmit = async (values,{setSubmitting, setErrors} ) => {
+    try{
     
+      const response= await axios.post(`http://localhost:8081/editReclamation/${id}`, values);
+      if(response.data==="Success")
+        console.log(response.data)
+        setSubmitting(false)
+        toast.success('Réclamation modifiée')
+        navigate('/User/Reclamation')
+      
+    }catch (error) {
+      console.log(error)
+      setErrors({form :'error in the form'})
+    }
   };
+  const navigate= useNavigate();
+  if (!reclamation) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Box m="20px"  >
     <Header title="Modifier une Réclamation" subtitle="  " />
@@ -27,7 +58,17 @@ function Modifier() {
     </Box>
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={initialValues}
+      initialValues={{nameUser: reclamation.nameUser || '',
+      emailUser: reclamation.emailUser || '',
+      numUser: reclamation.numUser || '',
+      emplacement: reclamation.emplacement || '',
+      nameEquipement: reclamation.nameEquipement || '',
+      categorie: reclamation.categorie || '',
+      description: reclamation.description || '',
+      priorite: reclamation.priorite || '',
+      DescPanne: reclamation.DescPanne || '',
+      date: reclamation.date|| '',
+    }}
       validationSchema={checkoutSchema}
     >
 
@@ -251,19 +292,6 @@ const checkoutSchema = yup.object().shape({
     date : yup
     .date(),
 });
-const initialValues = {
-  nameUser: "",
-  emailUser: "",
-  numUser: "",
-  emplacement:"",
-  nameEquipement: "",
-  categorie:"",
-  description:"",
-  priorite:"",
-  DescPanne:"",
-  date:''
-};
-
 
 
 export default Modifier

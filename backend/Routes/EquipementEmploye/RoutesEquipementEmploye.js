@@ -2,7 +2,8 @@ const express = require('express')
 const route = express.Router();
 const db = require('../../db')
 const EquipementEmployeModel= require('../../model/EquipementEmployeModel')
-const EquipementEmployeContoller= require('../../Controller/EquipementEmployeContoller')
+const EquipementEmployeContoller= require('../../Controller/EquipementEmployeContoller');
+const DetailEquipementEmployeController = require('../../Controller/DetailEquipementEmployeController');
 
 route.post('/Ajouter', EquipementEmployeContoller.addEquipementEmploye)
 route.get('/AfficherEmploye/:userId',EquipementEmployeContoller.getEquipementEmployeByUserId)
@@ -10,10 +11,46 @@ route.get('/AfficherAll',EquipementEmployeContoller.getAllEquipementEmploye)
 route.post('/EditEmploye/:id', EquipementEmployeContoller.updateEquipementEmploye)
 route.delete('/delete/:id', EquipementEmployeContoller.deleteEquipementEmploye)
 route.get('/employe', EquipementEmployeContoller.getAllEquipementEmploye)
+route.post('/DetailsEquipementEmploye',DetailEquipementEmployeController.AddDetailsEmploye)
 module.exports = route;
+//route.post('/equipement/:idEquipement/Updatedetail/:itemId', DetailEquipementController.updateDetailInEquipement);
+
+
+
+
+
 
 
 /*
+
+route.post('/DetailsEquipementEmploye', async (req, res)=>{
+    try{
+        const {selectedItem , customFields} =req.body.data 
+        const idEmploye= selectedItem.idEmploye
+        if(!Array.isArray(customFields)){
+            throw new Error ('additonalFields n\'est pas un tableau ')
+        }
+      //  console.log(additionalFields)
+    
+        await Promise.all(customFields.map(async (field)=>{
+            try{
+                const response = await db.query('INSERT INTO modal_employe ( fieldName, fieldValue, idEmploye) VALUES (?, ?, ?)', [ field.name,field.value,idEmploye]);
+               // console.log(response)
+            }
+            catch(error){
+                console.error(error)
+                throw new Error('Erreur lors de l\'insertion')
+            }
+        }));
+        res.status(200).send('détails ajouter avec succès')
+    }catch(error){
+        console.error(error)
+        res.status(500).send('error dans l\'insertion des details' )
+    }
+})
+
+
+
 route.post('/Ajouter', async (req, res) => {
     const values = [
         req.body.nomEmploye,

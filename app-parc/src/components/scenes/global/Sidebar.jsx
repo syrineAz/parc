@@ -52,6 +52,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
   return (
     <Box
       sx={{
+       
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
         },
@@ -171,14 +172,14 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
            
             <Item
               title="Réclamation"
-              to={`/AppHome/Reclamation/${reclamationId}`}
+              to="/AppHome/Reclamation"
               icon={<ReportIcon />}
               selected={selected}
               setSelected={setSelected}
             />
              <Item
               title="Réservation"
-              to={`/AppHome/Reservation/${reservationId}`}
+              to="/AppHome/Reservation"
               icon={<EventIcon/>}
               selected={selected}
               setSelected={setSelected}

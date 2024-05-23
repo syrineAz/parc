@@ -6,6 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit } from '@mui/icons-material'
 import './reclamation.css'
 import { Pagination } from '@mui/material'
+import { toast } from 'react-toastify';
+
 function Reclamation() {
   const [data, setData] = useState([])
   const [userReclamation, setUserReclamation] = useState([])
@@ -39,8 +41,17 @@ function Reclamation() {
     console.log(userReclamation)
   };
 
-  const handleDelete = ()=>{
-
+  const handleDelete = async (id)=>{
+    try{
+      const response= await axios.delete(`http://localhost:8081/deleteReclamation/${id}`)
+      if( response.status===200){
+        const updateReclamations= userReclamation.filter(reclamation=>reclamation.id !== id)
+        setUserReclamation(updateReclamations)
+        toast.success('Réclamation suprrimée avec succès')
+      }
+    }catch(error){
+      console.log(error)
+    }
   }
 
 
@@ -59,7 +70,18 @@ function Reclamation() {
       showDetails: false
     })))
   }
-
+  const getReclamationClass = (etat) => {
+    switch (etat) {
+      case 'En attente':
+        return 'en-attente';
+      case 'Acceptée':
+        return 'acceptee';
+      case 'Refusée':
+        return 'refusee';
+      default:
+        return '';
+    }
+  }
   return (
       <div className="reclamation-container">
         <Link to="/User/Reclamation/Envoyer" className="page-btnn">Envoyer une réclamation</Link>
@@ -72,13 +94,14 @@ function Reclamation() {
           const year = date.getFullYear();
           const formattedDate = `${day}-${month}-${year}`;
           return (
-            <div key={index} className="reclamation-item">
+            <div key={index} className={`reclamation-item ${getReclamationClass(reclamation.etat)}`}>
               <p  className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
                 onClick={() => handleToggleDetails(index)}>
                 {reclamation.nameUser}
               </p>
               {reclamation.showDetails && (
                 <div className="reclamation-details">
+                  <p>Numéro de la réclamation: {reclamation.id}</p>
                   <p>Email: {reclamation.emailUser}</p>
                   <p>Numéro de l'employé: {reclamation.numUser}</p>
                   <p>Emplacement: {reclamation.emplacement}</p>
@@ -88,8 +111,9 @@ function Reclamation() {
                   <p>Priorité: {reclamation.priorite}</p>
                   <p>Description de la panne: {reclamation.DescPanne}</p>
                   <p>Date: {formattedDate}</p>
+                  <p>Résultat: {reclamation.etat}</p> <br />
                   {
-                  !reclamation.isReadByAdmin && (
+                  reclamation.etat ==='En attente' && (
                     <>
                       <Link to={`/User/Reclamation/Modifier/${reclamation.id}`} className="edit-btn">
                         <Edit />

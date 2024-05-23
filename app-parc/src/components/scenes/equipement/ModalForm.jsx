@@ -18,7 +18,7 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
 
   useEffect(()=>{
     const savedFields =JSON.parse(localStorage.getItem(`equipement_${selectedItem.idEquipement}`))
-    console.log(savedFields)
+    //console.log(savedFields)
     if(savedFields){
       setAdditionalFields(savedFields)
     }
@@ -48,8 +48,8 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
       if(!Array.isArray(additionalFields)){
         throw new Error ('additonalFields n\'est pas un tableau ')
       }
-      console.log('Données à envoyer au backend :', additionalFields); // Vérifier les données avant de les envoyer
-      console.log("selectedItem :",selectedItem)
+      //console.log('Données à envoyer au backend :', additionalFields); // Vérifier les données avant de les envoyer
+     console.log("selectedItem :",selectedItem)
       console.log("additonalFields:", additionalFields)
       const response= await axios.post('http://localhost:8081/DetailsEquipement', {data: {
         selectedItem: { ...selectedItem },
@@ -65,13 +65,34 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
       console.error(error)
     }
   };
+  const updateFieldInDatabase = async (index, newValue) => {
+    try {
+      const fieldToUpdate = additionalFields[index];
+      const response = await axios.post(`http://localhost:8081/equipement/${selectedItem.idEquipement}/Updatedetail/${selectedItem}`, {
+        newValue
+      });
+      if (response.status === 200) {
+        toast.success('Champ mis à jour avec succès');
+        console.log('Params:', selectedItem.idEquipement, index);
+        const updatedFields = [...additionalFields];
+        updatedFields[index].value = newValue;
+        setAdditionalFields(updatedFields);
+        // Mettre à jour le localStorage après la modification
+        localStorage.setItem(`equipement_${selectedItem.idEquipement}`, JSON.stringify(updatedFields));
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du champ :', error);
+      toast.error('Erreur lors de la mise à jour du champ');
+    }
+  };
+
 
   const handleInput = (event, index) => {
     if (index !== undefined) {
       const updatedFields = [...additionalFields];
       updatedFields[index].value = event.target.value;
       setAdditionalFields(updatedFields);
-      console.log(setAdditionalFields)
+      //console.log(setAdditionalFields)
     } else {
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -84,9 +105,9 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
   const {idEquipement, itemId}= useParams()
   const handleRemoveField = async (index)=>{
     try {
-      const response = await axios.delete(`http://localhost:8081/equipement/${idEquipement}/Deletedetail/${itemId}`);
+      const response = await axios.delete(`http://localhost:8081/equipement/${selectedItem.idEquipement}/Deletedetail/${selectedItem.itemId}`);
       if (response.status === 200) {
-       toast.success('Détail supprimé avec succès');
+       toast.success('Le champ supprimé avec succès');
       // Supprimer du state additionalFields
       const updatedFields = [...additionalFields];
       updatedFields.splice(index, 1);
@@ -135,7 +156,12 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
                 <label htmlFor={`additionalField-${index}`}>{field.name}</label>
                 <input type="text" id={`additionalField-${index}`} name={`additionalField-${index}`} value={field.value} onChange={(e) => handleInput(e, index)} />
                 {user.role === 'admin' &&(
-                <button type="button" className='champs' onClick={() => handleRemoveField(index)}>Supprimer</button>)}
+                  <>
+                 <button type="button" className='champs' onClick={() => handleRemoveField(index)}>Supprimer</button>
+                 <button type="button" className='champs' onClick={() => updateFieldInDatabase(index, field.value)}>Modifier</button>
+                </>
+                )}
+
               </div>
             ))}
             {/* Afficher le champ personnalisé */}

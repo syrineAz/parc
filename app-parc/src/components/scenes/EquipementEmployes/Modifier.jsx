@@ -66,7 +66,10 @@ function Modifier() {
         emailEmploye: equipementData.emailEmploye || "",
         categorie: equipementData.categorie || "",
         numSerie: equipementData.numSerie || "",
-        nomEmploye: equipementData.nomEmploye || ""}}
+        nomEmploye: equipementData.nomEmploye || "",
+        idEmploye: equipementData.idEmploye ||"",
+        idEquipement:equipementData.idEquipement || "" ,
+        date: equipementData.date || "" }}
         validationSchema={checkoutSchema}
       >
 
@@ -88,6 +91,32 @@ function Modifier() {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="ID de l'équipement"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.idEquipement}
+                name="idEquipement"
+                error={!!touched.idEquipement && !!errors.idEquipement}
+                helperText={touched.idEquipement && errors.idEquipement}
+                sx={{ gridColumn: "span 4" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="ID de l'employé"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.idEmploye}
+                name="idEmploye"
+                error={!!touched.idEmploye && !!errors.idEmploye}
+                helperText={touched.idEmploye && errors.idEmploye}
+                sx={{ gridColumn: "span 4" }}
+              />
              <TextField
                 fullWidth
                 variant="filled"
@@ -141,7 +170,19 @@ function Modifier() {
                 sx={{ gridColumn: "span 4" }}
               />
               
-             
+              <TextField
+                fullWidth
+                variant="filled"
+                type="date"
+                label="Date de l'assignement"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.date}
+                name="date"
+                error={!!touched.date && !!errors.date}
+                helperText={touched.date && errors.date}
+                sx={{ gridColumn: "span 4" }}
+              />
               <TextField
                 select 
                 fullWidth
@@ -191,6 +232,15 @@ categorie: yup
   .required() ,
   nomEmploye: yup
   .string()
+  .required(),
+  idEquipement: yup
+  .string()
+  .required(),
+  idEmploye: yup
+  .string()
+  .required(),
+  date: yup
+  .date()
   .required()
 });
 

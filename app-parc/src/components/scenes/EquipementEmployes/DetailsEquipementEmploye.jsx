@@ -17,7 +17,7 @@ function DetailsEquipementEmploye({isOpen, closeModal, selectedItem, handleSave}
     }
 
     useEffect(()=>{
-      const savedFields =JSON.parse(localStorage.getItem(`employe_${selectedItem.id}`))
+      const savedFields =JSON.parse(localStorage.getItem(`employe_${selectedItem.idEmploye}`))
       console.log(savedFields)
       if(savedFields){
         setCustomFields(savedFields)
@@ -34,44 +34,81 @@ function DetailsEquipementEmploye({isOpen, closeModal, selectedItem, handleSave}
           setCustomFields(updatedFields);
           setNewFieldName('');
           setNewFieldValue('');
-          localStorage.setItem(`employe_${selectedItem.idEquipement}`, JSON.stringify(updatedFields))
+          localStorage.setItem(`employe_${selectedItem.idEmploye}`, JSON.stringify(updatedFields))
         }else{
           toast.error('Ce champ existe déjà  ')
         }
       }
     }
-    const handleRemoveField=(index)=>{
-      const updatedFields= [...customFields]
-      updatedFields.splice(index+1)
-      setCustomFields(updatedFields)
+
+    const handleRemoveField = async (index)=>{
+    try {
+      const response = await axios.delete(`http://localhost:8081/equipement/${selectedItem.idEquipement}/Deletedetail/${selectedItem.itemId}`);
+      if (response.status === 200) {
+       toast.success('Le champ supprimé avec succès');
+      // Supprimer du state additionalFields
+      const updatedFields = [...customFields];
+      updatedFields.splice(index, 1);
+      setCustomFields(updatedFields);
+      // Mettre à jour le localStorage après la suppression
+      localStorage.setItem(`employe_${selectedItem.idEmploye}`, JSON.stringify(updatedFields));
+      // Effacer la clé spécifique du localStorage
+      localStorage.removeItem(`employe_${selectedItem.idEmploye}`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression du détail :', error);
     }
-    handleSave= ()=>{
-      onSave(customFields);
-      closeModal();
+  
+  }
+
+  const updateFieldInDatabase = async (index, newValue)=>{
+    try {
+      const fieldToUpdate = customFields[index];
+      const response = await axios.post(`http://localhost:8081/employe/${selectedItem.idEquipement}/Updatedetailemploye/${selectedItem.index}`, {
+        newValue
+      });
+      if (response.status === 200) {
+        toast.success('Champ mis à jour avec succès');
+        console.log('Params:', selectedItem.idEquipement, selectedItem.id);
+        const updatedFields = [...customFields];
+        updatedFields[index].value = newValue;
+        setCustomFields(updatedFields);
+        // Mettre à jour le localStorage après la modification
+        localStorage.setItem(`employe_${selectedItem.idEmploye}`, JSON.stringify(updatedFields));
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du champ :', error);
+      toast.error('Erreur lors de la mise à jour du champ');
     }
+  }
+
+  handleSave= ()=>{
+    onSave(customFields);
+    closeModal();
+  }
 
     const handleSubmit= async (event)=>{
       event.preventDefault();
-    try{
+      try{
       if(!Array.isArray(customFields)){
         throw new Error ('customFields n\'est pas un tableau ')
       }
       console.log('Données à envoyer au backend :', customFields); // Vérifier les données avant de les envoyer
       console.log("selectedItem :",selectedItem)
-      console.log("additonalFields:", customFields)
+      console.log("customFields:", customFields)
       const response= await axios.post('http://localhost:8081/DetailsEquipementEmploye', {data: {
         selectedItem: { ...selectedItem },
         customFields: [...customFields]
         }
       })
-      console.log(response)
+      console.log(response.data)
       if(response.status==200){
         toast.success('Données enregistrées avec succées')
         
       }
-    }catch(error){
+      }catch(error){
       console.error(error)
-    }
+      }
     }
     const handleInput= (event, index)=>{
       const {name, value}= event.target;
@@ -111,7 +148,7 @@ function DetailsEquipementEmploye({isOpen, closeModal, selectedItem, handleSave}
               <input type="text" id="id" value={selectedItem.equipementName} onChange={handleInput} />
             </div>
             <div>
-              <label htmlFor="nnm">Numéro de série :  </label>
+              <label htmlFor="num">Numéro de série :  </label>
               <input type="text" id="num" value={selectedItem.numSerie} onChange={handleInput} />
             </div>
             {/* Afficher les champs de formulaire supplémentaires */}
@@ -120,15 +157,20 @@ function DetailsEquipementEmploye({isOpen, closeModal, selectedItem, handleSave}
                 <label htmlFor={`customFields-${index}`}>{field.name}</label>
                 <input type="text" id={`customFields-${index}`} name={`customFields-${index}`} value={field.value} onChange={(e) => handleInput(e, index)} />
                 {user.role === 'admin' &&(
-                <button type="button" className='champs' onClick={() => handleRemoveField(index)}>Supprimer</button>)}
+                  <>
+                <button type="button" className='champs' onClick={() => handleRemoveField(index)}>Supprimer</button>
+                <button type="button" className='champs' onClick={() => updateFieldInDatabase(index, field.value)}>Modifier</button>
+                  </>
+                )}
               </div>
             ))}
             {/* Afficher le champ personnalisé */}
             
             {customFields && user.role==='admin'&& (
               <div>
-                <label htmlFor="newFieldValue">{customFields}</label>
+                <label htmlFor="newFieldValue">{newFieldName}</label>
                 <input type="text" id="newFieldValue" name="newFieldValue" value={newFieldValue} onChange={handleChangeCustomFieldValue} />
+
               </div>
             )}
             {user.role==='admin'&&(

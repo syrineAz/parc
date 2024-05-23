@@ -73,20 +73,28 @@ function CardDetails() {
   };
 
 
-   
-  const handleDelete = async (idEquipement) =>{
-    try{
-      const response= await axios.delete(`http://localhost:8081/DeleteEquipement/${idEquipement}`)
-      if(response.status == 200){
-        setData(prevData => prevData.filter(item => item.id !== idEquipement))
-        toast.success('Equipement supprimer')
+  const handleDelete = async (idEquipement) => {
+    try {
+      // Envoyer la requête DELETE vers le backend
+      const response = await axios.delete(`http://localhost:8081/DeleteEquipement/${idEquipement}`);
+  
+      // Vérifier la réponse du backend
+      if (response.status === 200) {
+        // Supprimer localement l'équipement de l'état (data)
+        setData(prevData => prevData.filter(item => item.id !== idEquipement));
+        toast.success('Équipement supprimé avec succès');
+      } else {
+        // Si le backend retourne une autre réponse que 200, gérer l'erreur
+        console.error('Erreur lors de la suppression de l\'équipement:', response);
+        toast.error('Cette équipement est déjà affecter , ne peut pas supprimer');
       }
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      // Gérer les erreurs de requête ou réseau
+      console.error('Erreur lors de la suppression de l\'équipement:', error);
+      toast.error('Cette équipement est déjà affecter , ne peut pas supprimer');
     }
-  }
-
-
+  };
+  
   const [ItemPerPage]= useState(5)
   const [currentPage, setCurrentPage]= useState(1)
   
@@ -107,19 +115,21 @@ function CardDetails() {
         <Link to={`/User/Categorie/${title}/${id}/Reservation`} className="page-btnn">Réserver équipement</Link>
       )}
 
-      <h1>
+      <h1 className='titre'>
         Liste des équipements : {title}
       </h1>
       <div>
       <table className='user-table'>
             <thead>
               <tr>
-                
+                <th>Id</th>
                 <th>Nom de l'équipement</th>
                 <th>Numéro de Série</th>
                 <th>Nom de la fournisseur</th>
-                <th>Prix</th>
+                {user.role==='admin'&&(
+                <th>Prix</th>)}
                 <th>Garantie</th>
+                <th>Disponibilité</th>
                 <th>Catégorie</th>
                 <th>Action</th>
               </tr>
@@ -127,26 +137,29 @@ function CardDetails() {
             <tbody className='body'>
               {currentItems.map((item) => (
                 <tr key={item.idEquipement}>
-                
+                  <td>{item.idEquipement}</td>
                   <td>{item.NameEquipement}</td>
                   <td>{item.numSerie}</td>
                   <td>{item.NameFournisseur}</td>
-                  <td>{item.prix}</td>
+                  {user.role==='admin'&&(
+                  <td>{item.prix}</td>)}
                   <td>{item.garantie}</td>
+                  <td>{item.Disponibilite}</td>
                   <td>{item.categorie}</td>            
                   <td>
-                    <Link onClick={() => openModal(item)} className='link'>Détails</Link>
-                  </td>
+                    <Link onClick={() => openModal(item)} className='link'>Afficher</Link><br />
+                  
                   {user.role ==="admin" && (
-                    <td>
+                    <>
                       <Link to={`/AppHome/Categorie/${title}/${id}/EditEquipement/${item.idEquipement}`} className='link'>
                         <Edit />
                       </Link>
                       <button onClick={() => handleDelete(item.idEquipement)} className='delete'>
                         <DeleteIcon />
                       </button>
-                    </td>
+                    </>
                   )}
+                   </td>
                   
                 </tr>
               ))}

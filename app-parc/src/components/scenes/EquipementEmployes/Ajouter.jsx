@@ -15,9 +15,9 @@ import { toast } from 'react-toastify';
 function Ajouter() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate()
-  /*const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
+  const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
     try {
-        if (!values.idEmploye || !values.nomEmploye || !values.emailEmploye || !values.equipementName || !values.numSerie ||!values.categorie) {
+        if (!values.idEquipement || !values.idEmploye || !values.nomEmploye || !values.emailEmploye || !values.equipementName || !values.numSerie ||!values.categorie || !values.date) {
             setErrors({ form: 'All fields are required' });
             return;
         }
@@ -45,11 +45,11 @@ function Ajouter() {
           setErrors({ form: 'Error in the form' });
       }
     }
-  };*/
+  };/*
 
   const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
     try {
-      if (!values.idEmploye || !values.nomEmploye || !values.emailEmploye || !values.equipementName || !values.numSerie || !values.categorie) {
+      if (!values.idEquipement || !values.idEmploye || !values.nomEmploye || !values.emailEmploye || !values.equipementName || !values.numSerie || !values.categorie) {
         setErrors({ form: 'All fields are required' });
         return;
       }
@@ -79,7 +79,7 @@ function Ajouter() {
       console.error(error);
       setErrors({ form: 'Error in the form' });
     }
-  };
+  };*/
   
 
 
@@ -114,6 +114,19 @@ function Ajouter() {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
+               <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="ID de l'équipement"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.idEquipement}
+                name="idEquipement"
+                error={!!touched.idEquipement && !!errors.idEquipement}
+                helperText={touched.idEquipement && errors.idEquipement}
+                sx={{ gridColumn: "span 4" }}
+              />
               <TextField
                 fullWidth
                 variant="filled"
@@ -179,7 +192,19 @@ function Ajouter() {
                 helperText={touched.numSerie && errors.numSerie}
                 sx={{ gridColumn: "span 4" }}
               />
-              
+               <TextField
+                fullWidth
+                variant="filled"
+                type="date"
+                label="Date de l'assignement"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.date}
+                name="date"
+                error={!!touched.date && !!errors.date}
+                helperText={touched.date && errors.date}
+                sx={{ gridColumn: "span 4" }}
+              />
              
               <TextField
                 select 
@@ -234,6 +259,12 @@ const checkoutSchema = yup.object().shape({
   idEmploye: yup
   .string()
   .required(),
+  idEquipement: yup
+  .string()
+  .required(),
+  date: yup
+  .date()
+  .required()
 });
 const initialValues = {
 equipementName: "",
@@ -241,6 +272,8 @@ equipementName: "",
   categorie:"",
   numSerie:"",
   nomEmploye:"",
-  idEmploye:''
+  idEmploye:'',
+  idEquipement:'', 
+  date:""
 };
 export default Ajouter

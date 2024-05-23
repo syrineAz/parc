@@ -1,6 +1,7 @@
 const express = require('express')
 const route = express.Router();
 const db = require('../../db')
+const DashboardController = require('../../Controller/DashboardController')
 
 route.get('/EmployeCount', (req, res)=>{
     db.query('SELECT COUNT(*) AS total FROM user', (err, result)=>{
@@ -10,7 +11,7 @@ route.get('/EmployeCount', (req, res)=>{
             return;
         }
         const employeCount= result[0].total
-        //console.log(employeCount)
+        console.log(employeCount)
         res.json({employeCount})
     })
 })

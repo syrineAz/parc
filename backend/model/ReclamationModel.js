@@ -6,7 +6,7 @@ const { Socket } = require('socket.io');
 const ReclamationModel = {
     addReclamation: (values  ) => {
       return new Promise((resolve, reject) => {
-        const insertReclamationQuery = "INSERT INTO reclamationuser ( nameUser, emailUser, numUser, emplacement, nameEquipement, categorie, description, priorite, DescPanne, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const insertReclamationQuery = "INSERT INTO reclamationuser ( nameUser, emailUser, numUser, emplacement, nameEquipement, categorie, description, priorite, DescPanne, date, etat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,'En attente')";
         const selectAdminIdQuery = "SELECT id FROM sign WHERE role = 'admin' ";
   
         db.query(insertReclamationQuery, values, (err, data) => {
@@ -76,7 +76,7 @@ const ReclamationModel = {
     
     getAllReclamations: () => {
       return new Promise((resolve, reject) => {
-        const selectReclamationsQuery = "SELECT * FROM reclamationuser";
+        const selectReclamationsQuery = "SELECT * FROM reclamationuser ORDER BY id DESC ";
         db.query(selectReclamationsQuery, (err, reclamations) => {
           if (err) {
             console.error('Erreur lors de la récupération des réclamations :', err);
@@ -85,7 +85,81 @@ const ReclamationModel = {
           resolve(reclamations);
         });
       });
+    },
+    acceptReclamation: (id, status,callback) => {
+      db.query('UPDATE reclamationuser SET etat = ? WHERE id = ?', [status, id], (err, result) => {
+        if (err) {
+          console.error('Erreur lors de l\'acceptation de la réclamation :', err);
+          callback(err, null);
+        } else {
+          callback(null, result);
+        }
+      });    
+    },
+
+    refuseReclamation: (id, status,callback) => {
+      db.query('UPDATE reclamationuser SET etat = ? WHERE id = ?', [status, id], (err, result) => {
+        if (err) {
+          console.error('Erreur lors de la refus de la réclamation :', err);
+          callback(err, null);
+        } else {
+          callback(null, result);
+        }
+      });       
+    },
+    getReclamationById: (id, callback)=>{
+      db.query("SELECT * FROM reclamationuser WHERE id= ?", [id],(err, result)=>{
+        if (err) {
+          console.error('Erreur lors de la recuperetion de id :', err);
+          callback(err, null);
+        } 
+        if (result.length===0) {
+          callback(null, null);
+        }
+        callback(null, result[0])
+      })
+    },
+    updateReclamation: (id, values) => {
+      return new Promise((resolve, reject) => {
+        const sql = "UPDATE reclamationuser SET nameUser = ?, emailUser = ?, numUser = ?, emplacement = ?, nameEquipement = ?, categorie = ?,description=?, priorite=?,DescPanne=?,date=? WHERE id = ?";
+        const updatedValues = [
+          values.nameUser,
+          values.emailUser,
+          values.numUser,
+          values.emplacement,
+          values.nameEquipement,
+          values.categorie,
+          values.description,
+          values.priorite,
+          values.DescPanne,
+          values.date,
+          id
+        ];
+        db.query(sql, updatedValues, (err, data) => {
+          console.log(updatedValues)
+          if (err) {
+            console.error(err.message);
+            reject("Error updating reclamation");
+          } else {
+            resolve("Reclamation updated successfully");
+          }
+        });
+      });
+    },
+    deleteReclamation: (id) => {
+      return new Promise((resolve, reject) => {
+        const query = "DELETE FROM reclamationuser WHERE id = ?";
+        db.query(query, [id], (error, results) => {
+          if (error) {
+            console.error(error);
+            reject("Error deleting reclamation");
+          } else {
+            resolve("reclamation deleted successfully");
+          }
+        });
+      });
     }
+    
 };
 
 

@@ -10,20 +10,29 @@ import {Link, useNavigate, useParams} from "react-router-dom"
 import { useEffect } from "react";
 import Equipement from "./Equipement";
 import MenuItem from '@mui/material/MenuItem';
-
 function EditEquipement() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
     const {id, title, item_idEquipement}= useParams()
     const [equipementData, setEquipementData]= useState(null)
+    const navigate= useNavigate();
+
     useEffect(() => {
       const fetchEquipementData = async () => {
         try {
+          // Ensure the endpoint is correct
           const response = await axios.get(`http://localhost:8081/AfficheEditEquipement/${title}`);
-          const equipementData = response.data.filter(equipement => equipement.item_idEquipement === parseInt(item_idEquipement));
-          setEquipementData(equipementData);
-          console.log(equipementData)
+          console.log("Fetched equipment data:", response.data);
+          
+          // Check if response.data is an array
+          if (Array.isArray(response.data)) {
+            const equipement = response.data.find(e => e.idEquipement === parseInt(item_idEquipement));
+            console.log("Filtered equipment data:", equipement);
+            setEquipementData(equipement);
+          } else {
+            console.error("Unexpected data format:", response.data);
+          }
         } catch (error) {
-          console.log(error);
+          console.error("Error fetching equipment data:", error);
         }
       };
       fetchEquipementData();
@@ -32,12 +41,19 @@ function EditEquipement() {
     if (!equipementData) {
       return <div>Loading...</div>;
     }
-    const handleFormSubmit = async (values,{setSubmitting, setErrors} ) => {
-     
+    const handleFormSubmit = async (values, { setSubmitting, setErrors }) => {
+      try {
+        await axios.post(`http://localhost:8081/EditEquipement/${item_idEquipement}`, values);
+        setSubmitting(false);
+        navigate(`/AppHome/Categorie/${title}/${id}`);
+      } catch (error) {
+        console.log(error);
+        setErrors({ submit: "An error occurred while updating the equipment" });
+        setSubmitting(false);
+      }
     };
 
 
-    //const navigate= useNavigate();
    
     return (
         <Box m="20px">
@@ -52,7 +68,7 @@ function EditEquipement() {
               Disponibilite: equipementData.Disponibilite || "",
               garantie: equipementData.garantie || "",
               categorie: equipementData.categorie || "",
-              num:equipementData.num || "",
+              numSerie:equipementData.numSerie || "",
             }}
             validationSchema={checkoutSchema}
           >
@@ -95,10 +111,10 @@ function EditEquipement() {
                 label="Numéro de Série"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.num}
-                name="num"
-                error={!!touched.num && !!errors.num}
-                helperText={touched.num && errors.num}
+                value={values.numSerie}
+                name="numSerie"
+                error={!!touched.numSerie && !!errors.numSerie}
+                helperText={touched.numSerie && errors.numSerie}
                 sx={{ gridColumn: "span 4" }}
               />
               <TextField
@@ -208,7 +224,7 @@ const checkoutSchema = yup.object().shape({
   categorie: yup
     .string()
     .required(),
-  num: yup 
+    numSerie: yup 
     .string()
     .required()
 });

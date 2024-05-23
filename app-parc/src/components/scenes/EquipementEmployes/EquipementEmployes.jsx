@@ -60,7 +60,7 @@ function EquipementEmployes() {
   };
   const handleSave = (fields) => {
     const updatedData = data.map(equipement => {
-      if (equipement.id === selectedItem.id) {
+      if (equipement.id === selectedItem.idEmploye) {
         return { ...equipement, customFields: fields };
       }
       return item;
@@ -69,7 +69,7 @@ function EquipementEmployes() {
   };
 
 
-  const [ItemPerPage]= useState(5)
+  const [ItemPerPage]= useState(7)
   const [currentPage, setCurrentPage]= useState(1)
   
   const indexOfLastItem= currentPage * ItemPerPage;
@@ -98,30 +98,38 @@ function EquipementEmployes() {
               <th>Nom de l'equipement</th>
               <th>Numéro de série</th>
               <th>Catégorie</th>
+              <th>Date</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(data) && currentItems.map((equipement , index)=>{
+                const date = new Date(equipement.date);
+                const day = date.getDate();
+                const month = date.getMonth() + 1;
+                const year = date.getFullYear();
+                const formattedDate = `${day}-${month}-${year}`;
               return <tr key={index}>
                 <td>{equipement.nomEmploye}</td>
                 <td>{equipement.emailEmploye}</td>
                 <td>{equipement.equipementName}</td>
                 <td>{equipement.numSerie}</td>
                 <td>{equipement.categorie}</td>
+                <td>{formattedDate}</td>
                 <td>
-                  <Link onClick={()=>openModal(equipement)} className='link'>Détails</Link>
-                </td>
+                  <Link onClick={()=>openModal(equipement)} className='link'>Voir Plus</Link>
+                
                 {user.role ==="admin" && (
-                    <td>
+                    <>
                       <Link to={`/AppHome/EquipementEmployes/Modifier/${equipement.id}`} className='link'>
                         <Edit />
                       </Link>
                       <button onClick={() => handleDelete(equipement.id)} className='delete'>
                         <DeleteIcon />
                       </button>
-                    </td>
+                    </>
                   )}
+                  </td>
               </tr>
             })}
           </tbody>
@@ -129,10 +137,10 @@ function EquipementEmployes() {
       </div>
       <div className="paginationContainer">
         <Pagination
-           count = {Math.ceil(data.length / ItemPerPage)}
-           page={currentPage}
-           onChange={handlePageChagne}
-           className='pagination-nav'
+          count = {Math.ceil(data.length / ItemPerPage)}
+          page={currentPage}
+          onChange={handlePageChagne}
+          className='pagination-nav'
         />
       </div>
       {showModal && (

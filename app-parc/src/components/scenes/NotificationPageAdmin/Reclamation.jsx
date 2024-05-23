@@ -1,142 +1,159 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Edit } from '@mui/icons-material'
+import '../ReclamationPageEmploye/reclamation.css'
+import { Pagination } from '@mui/material'
+import { toast } from 'react-toastify';
+
 function Reclamation() {
-  const { reclamationId } = useParams()
-  const [reclamation, setReclamation]= useState(null)
-  console.log(reclamationId)
-  useEffect (()=>{
-    const fetchReclamationDetails = async() =>{
-      try{
-        const response= await axios.get(`http://localhost:8081/AfficheDetailsReclamation/${reclamationId}`)
-        console.log(response.data)
-        setReclamation(response.data)
-      }catch(error){
-        console.error(error)
-      }
-    }
-    fetchReclamationDetails();
-  },[reclamationId])
-  if(!reclamation){
-    return <div>loading ....</div>
-  }
-  return (
-    <div>
-      <h1>Les détails de les réclamations</h1>
-      <p>Nom de l'employé: {reclamation.nameUser}</p>
-      <p>Email de l'employé: {reclamation.emailUser}</p>
-      <p>Numéro de l'employé: {reclamation.numUser}</p>
-      <p>Emplacement de l'employé: {reclamation.emplacement}</p>
-      <p>Nom de l'équipement: {reclamation.nameEquipement}</p>
-      <p>Catégorie de l'équipement: {reclamation.categorie}</p>
-      <p>Titre du problème : {reclamation.description}</p>
-      <p>Priorité du panne: {reclamation.priorite}</p>
-      <p>Date du panne: {reclamation.date}</p>
-      <p>Discription du problème: {reclamation.DescPanne}</p>
-
-    </div>
-  )
-}
-
-export default Reclamation
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import io from 'socket.io-client'
-const socket = io('http://localhost:3000')
-const Reclamation = () => {
-  const [reclamation, setReclamation] = useState(null);
+  const [reclamations, setReclamations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { reclamationId } = useParams();
-
+  const [user, setUser] = useState("");
+  const [reclamationPerPage]= useState(3)
+  const [currentPage, setCurrentPage]= useState(1)
+  
   useEffect(() => {
-    const fetchReclamation = async () => {
+    const fetchReclamations = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/AfficheReclamation/${reclamationId}`);
-        setReclamation(response.data);
+        const response = await axios.get('http://localhost:8081/Affichereclamations');
+        setReclamations(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching reclamation:', error);
+        console.error('Erreur lors de la récupération des réclamations :', error);
         setError(error.message);
         setLoading(false);
       }
     };
 
-    fetchReclamation();
-  }, [reclamationId]);
-
-  const emitNewReclamation = async () => {
-    try {
-      const reclamationData = {
-        reclamationUser: reclamation,
-        id: reclamationId
-      };
-
-      // Émettre l'événement 'nouvelle_reclamation' avec les données de la réclamation et l'ID de la réclamation
-      // Assurez-vous d'avoir une instance de socket.io pour émettre cet événement
-       socket.emit('nouvelle_reclamation', reclamationData);
-      console.log(reclamationData)
-      console.log('Événement nouvelle_reclamation émis avec succès.');
-    } catch (error) {
-      console.error('Error emitting new reclamation event:', error);
-    }
+    fetchReclamations();
+  }, []);
+  
+  const handleToggleDetails = (index) => {
+    setReclamations(reclamations.map((reclamation, i) => (
+      i === index ? { ...reclamation, showDetails: !reclamation.showDetails } : reclamation
+    )));
+    console.log(reclamations)
   };
-
-  useEffect(() => {
-    // Appeler la fonction emitNewReclamation lorsqu'un changement dans la réclamation se produit
-    if (reclamation) {
-      emitNewReclamation();
-    }
-  }, [reclamation]);
-
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Chargement...</p>;
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <p>Erreur : {error}</p>;
   }
 
+
+  
+  const updateReclamationStatus = (id, status) => {
+    setReclamations(reclamations.map(r => r.id === id ? { ...r, status } : r));
+  };
+
+  const handleAccept = async (id)=>{
+    try{
+      const response=  await axios.post('http://localhost:8081/AcceptReclamation', { id, status: 'acceptée' })
+      console.log(response.data)
+      toast.success('Acceptation envoyer ')
+      updateReclamationStatus(id, 'acceptée');    }
+    catch(error){
+      console.error(error)
+      toast.error("l'acceptation n'est pas envoyer ")
+    }
+  }
+
+  const handleRefuse = async(id)=>{
+    try{
+      const response = await axios.post('http://localhost:8081/RefusReclamation', { id, status: 'refusée' })
+      toast.success('Le refus est envoyé')
+      updateReclamationStatus(id, 'refusée');
+    }
+    catch(error){
+      console.error(error)
+      toast.error("le refus n'est pas envoyer ")
+    }
+  }
+  const indexOfLastReclamation= currentPage * reclamationPerPage;
+  const indexOfFirstReclamation = indexOfLastReclamation-reclamationPerPage;
+  const currentReclamation= reclamations.slice(indexOfFirstReclamation,indexOfLastReclamation) 
+  
+  const paginate= (event,pageNumber) =>{
+    setCurrentPage(pageNumber)
+    resetShowDetails()
+  }
+  const resetShowDetails= ()=>{
+    setReclamations(reclamations.map(reclamation => ({
+      ...reclamation, 
+      showDetails: false
+    })))
+  }
+  const getReclamationClass = (etat) => {
+    switch (etat) {
+      case 'En attente':
+        return 'en-attente';
+      case 'Acceptée':
+        return 'acceptee';
+      case 'Refusée':
+        return 'refusee';
+      default:
+        return '';
+    }
+  }
   return (
-    <div>
-      <h1>Details de la Réclamation</h1>
-      {reclamation && (
-        <div>
-          <p>Nom de l'utilisateur : {reclamation.nameUser}</p>
-          <p>Email de l'utilisateur : {reclamation.emailUser}</p>
-          <p>Description : {reclamation.description}</p>
-          {/* Ajoutez d'autres champs de réclamation ici si nécessaire */
-       /* </div>
-      )
+      <div className="reclamation-container">
+      <h1>Votre liste des réclamations</h1>
+      <div className="reclamation-list">
+        {currentReclamation.map((reclamation, index) => {
+          const date = new Date(reclamation.date);
+          const day = date.getDate();
+          const month = date.getMonth() + 1;
+          const year = date.getFullYear();
+          const formattedDate = `${day}-${month}-${year}`;
+          return (
+            <div key={index} className={`reclamation-item ${getReclamationClass(reclamation.etat)}`}>
+              <p  className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
+                onClick={() => handleToggleDetails(index)}>
+                {reclamation.nameUser}
+              </p>
+              {reclamation.showDetails && (
+                <div className="reclamation-details">
+                  <p>Numéro de la réclamation: {reclamation.id}</p>
+                  <p>Email: {reclamation.emailUser}</p>
+                  <p>Numéro de l'employé: {reclamation.numUser}</p>
+                  <p>Emplacement: {reclamation.emplacement}</p>
+                  <p>Nom de l'équipement: {reclamation.nameEquipement}</p>
+                  <p>Catégorie: {reclamation.categorie}</p>
+                  <p>Titre du problème: {reclamation.description}</p>
+                  <p>Priorité: {reclamation.priorite}</p>
+                  <p>Description de la panne: {reclamation.DescPanne}</p>
+                  <p>Date: {formattedDate}</p>
+                  {reclamation.etat === 'En attente' && (
+                  <>
+                    <button onClick={() => handleAccept(reclamation.id)}>Accepter</button>
+                    <button onClick={() => handleRefuse(reclamation.id)}>Refuser</button>
+                  </>
+                  )}
+                  {reclamation.etat === 'acceptée' && <p>Statut: Acceptée</p>}
+                  {reclamation.etat === 'refusée' && <p>Statut: Refusée</p>}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div className='paginationContainer'>
+      <Pagination
+         count={Math.ceil(reclamations.length / reclamationPerPage)}
+         page={currentPage}
+         onChange={paginate}
+         className="pagination-nav"
+      />
+      </div>
     </div>
   );
-};
+}
+
 
 export default Reclamation;
-*/

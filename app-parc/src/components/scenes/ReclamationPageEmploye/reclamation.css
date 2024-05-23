@@ -3,22 +3,38 @@
     font-family: 'Courier New';
 }
  
-.reclamation-list {
-    margin-top: 20px;
+h1{
+    padding: 10px;
 }
-  
+.reclamation-list {
+    margin-top: 5px;
+   /* display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 150px;*/
+}
+
 .reclamation-item {
-    border: 1px solid #ddd;
+    border: 1px solid white;
     border-radius: 5px;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 20px;
     background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.reclamation-item:hover{
+    transform: scale(1.03);
+    background-color: whitesmoke;
+    border-color: #ddd; 
+
 }
   
 .reclamation-title {
     cursor: pointer;
     font-weight: bold;
-    color: #3da58a;
+    color: black;
     font-size: 15px;
     text-transform: uppercase;
     transition: font-size 0.3s ease;
@@ -49,6 +65,8 @@
     text-align: center;
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
+    font-size: 15px;
+    font-weight:550;
 }
 .reclamation-details p:hover{
     transform: scale(1.05); 
@@ -94,4 +112,42 @@
     display: flex;
     justify-content: center;
     margin-top: 20px; 
+}
+
+.reclamation-item.en-attente {
+    background-color: lightblue; /* Couleur pour l'état "En attente" */
+}
+
+.reclamation-item.acceptee {
+    background-color: lightgreen; /* Couleur pour l'état "Acceptée" */
+}
+
+.reclamation-item.refusee {
+    background-color: lightcoral; /* Couleur pour l'état "Refusée" */
+}
+
+.etatAccepter{
+    cursor: pointer;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 3px;
+    font-size: 15px;
+}
+.etatAccepter:hover{
+    transform: scale(1.05); 
+    background-color:#45c4a2; 
+}
+
+.etatRefuser{
+    cursor: pointer;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 3px;
+    font-size: 15px;
+}
+.etatRefuser:hover{
+    transform: scale(1.05); 
+    background-color: lightcoral;
 }

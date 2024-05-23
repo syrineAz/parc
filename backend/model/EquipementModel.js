@@ -45,40 +45,44 @@ const EquipementModel = {
     });
   },
 
-  /*deleteEquipement: (idEquipement) => {
-    return new Promise((resolve, reject) => {
-      const query = "DELETE FROM equipement WHERE idEquipement = ?";
-      db.query(query, [idEquipement], (err, result) => {
-        if (err) {
-          console.error(err);
-          reject("Error deleting equipement");
-        } else {
-          resolve("Equipement deleted successfully");
-        }
-      });
-    });
-  },*/
-
   deleteEquipement: (equipementId) => {
     return new Promise((resolve, reject) => {
-      const sql = 'DELETE FROM equipement WHERE idEquipement = ?';
-      db.query(sql, [equipementId], async (err, result) => {
-        if (err) {
-          console.error(err);
-          reject("Error deleting equipement");
-        } else {
-          // Supprimer les détails associés dans modal_detail
-          try {
-            await DetailEquipementModel.deleteDetailsByEquipementId(equipementId);
-            resolve("Equipement and details deleted successfully");
-          } catch (error) {
-            console.error(error);
-            reject("Error deleting equipement details");
-          }
+      // Vérifier d'abord si l'équipement est affecté à un employé
+      const checkQuery = 'SELECT id FROM equipement_employe WHERE idEquipement = ? LIMIT 1';
+      db.query(checkQuery, [equipementId], async (checkErr, checkResult) => {
+        if (checkErr) {
+          console.error(checkErr);
+          reject("Error checking equipment assignment");
+          return;
         }
+  
+        if (checkResult.length > 0) {
+          // L'équipement est affecté à un employé, ne peut pas être supprimé
+          reject("Cannot delete equipment assigned to an employee");
+          return;
+        }
+  
+        // Si l'équipement n'est pas affecté à un employé, procéder à la suppression
+        const deleteQuery = 'DELETE FROM equipement WHERE idEquipement = ?';
+        db.query(deleteQuery, [equipementId], async (err, result) => {
+          if (err) {
+            console.error(err);
+            reject("Error deleting equipement");
+          } else {
+            // Supprimer les détails associés dans modal_detail
+            try {
+              await DetailEquipementModel.deleteDetailsByEquipementId(equipementId);
+              resolve("Equipement and details deleted successfully");
+            } catch (error) {
+              console.error(error);
+              reject("Error deleting equipement details");
+            }
+          }
+        });
       });
     });
   },
+  
 
   updateEquipement: (values) => {
     return new Promise((resolve, reject) => {

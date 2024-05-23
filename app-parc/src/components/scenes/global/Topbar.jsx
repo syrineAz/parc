@@ -24,11 +24,9 @@ const Topbar = () => {
   const [anchorEl, setAnchorEl] = useState(null); 
   const [notificationAncorEl, setNotificationAncrolEl] = useState(null)
   const [notifications , setNotifications ] = useState([]);
-  const {reclamationId, reservationId} = useParams()
+  
 
   useEffect(()=>{
-
-    
     socket.on('nouvelle_reclamation_admin',(notification)=>{
       console.log("nouvelle notification réçue",notification )
       setNotifications((prevNotifications)=> [...prevNotifications , {...notification , type:'reclamation'}])
@@ -39,7 +37,7 @@ const Topbar = () => {
       setNotifications((prevNotifications)=> [...prevNotifications , {...reservation, type:'reservation'}])
     })
     return ()=>{
-      socket.off('nouvelle_reclamation')
+      socket.off('nouvelle_reclamation_admin')
       socket.off('nouvelle_reservation_admin')
     }
   },[])
@@ -53,9 +51,9 @@ const Topbar = () => {
   })
   const handleNotificationSelect = (notification)=>{
     if(notification.type ==='reclamation' ){
-      navigate(`/AppHome/Reclamation/${reclamationId}`)
+      navigate("/AppHome/Reclamation")
     }else if(notification.type === 'reservation'){
-      navigate(`/AppHome/Reservation/${reservationId}`)
+      navigate("/AppHome/Reservation")
     }
     setNotificationAncrolEl(null)
   }

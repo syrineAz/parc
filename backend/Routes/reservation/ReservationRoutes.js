@@ -8,7 +8,11 @@ const ReservationController= require('../../Controller/ReservationController')
 route.post('/reservation', ReservationController.addReservation);
 route.get('/AfficheReservation', ReservationController.getAllReservation);
 route.get('/AfficheDetailsReservation/:reservationId', ReservationController.getReservationDetails);
-
+route.post('/AcceptReservation', ReservationController.getAcceptReservation)
+route.post('/AcceptReservation', ReservationController.getAcceptReservation)
+route.post('/RefusReservation', ReservationController.getRefusReservation)
+route.post('/editReservation/:id',ReservationController.updateReservation)
+route.delete('/deleteReservation/:id',ReservationController.deleteReservation)
 
 module.exports = route;
 

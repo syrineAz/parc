@@ -8,7 +8,9 @@ const EquipementEmployeContoller ={
             req.body.equipementName,
             req.body.numSerie,
             req.body.categorie,
-            req.body.idEmploye
+            req.body.idEmploye,
+            req.body.idEquipement,
+            req.body.date
         ];
         try {
             const result = await EquipementEmployeModel.addEquipementEmploye(values);

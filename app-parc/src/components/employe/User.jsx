@@ -16,6 +16,7 @@ import Envoyer from '../scenes/ReclamationPageEmploye/Envoyer.jsx';
 import Reservation from '../scenes/equipement/Reservation.jsx';
 import Modifier from '../scenes/ReclamationPageEmploye/Modifier.jsx';
 import ListeReservation from '../scenes/equipement/ListeReservation.jsx';
+import ModifierReservation from '../scenes/equipement/ModifierReservation.jsx';
 function User() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -53,6 +54,7 @@ function User() {
                 <Route path="/Line/*" element={<Line />} />   
                 <Route path="/EquipementEmployes/*" element={<EquipementEmployes />} />   
                 <Route path="/ListeReservation/*" element={<ListeReservation />} />   
+                <Route path="/ListeReservation/ModifierReservation/:id" element={<ModifierReservation />} />   
 
                 {user.role ==="employer"&&(       
                 <>

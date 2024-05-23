@@ -8,13 +8,20 @@ const ReclamationController= require('../../Controller/ReclamationController')
 route.post('/reclamationUser', ReclamationController.addReclamation);
 route.get('/AfficheDetailsReclamation/:reclamationId', ReclamationController.getReclamationDetails);
 route.get('/Affichereclamations', ReclamationController.getAllReclamations);
+route.post('/AcceptReclamation', ReclamationController.getAcceptReclamation)
+route.post('/RefusReclamation',ReclamationController.getRefusReservation)
+route.post('/editReclamation/:id',ReclamationController.updateReclamation)
+route.delete('/deleteReclamation/:id',ReclamationController.deleteReclamation)
 
 module.exports = route;
 
 
+
+
+
+
+
 /*
-
-
 route.post('/reclamationUser', (req, res) => {
   const values = [
     req.body.nameUser,
