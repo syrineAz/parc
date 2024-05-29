@@ -1,6 +1,7 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const util = require('util');
 
 class UserModel {
     static async createUser(name, email, password) {
@@ -16,14 +17,10 @@ class UserModel {
     }
 
     static async getUserByEmail(email) {
-        //console.log(email)
         try {
-            const sql = "SELECT id,name, email, password, role FROM sign WHERE email = ? ";
-            const result = await db.query(sql, [email]);
-           // console.log(email)
-           // console.log(result)
-            return result;
-            
+            const sql = "SELECT id, email, role, name, password FROM sign WHERE email = ?";
+            const [results] = await db.query(sql, [email]);
+            return results;
         } catch (error) {
             console.error("Erreur lors de la récupération de l'utilisateur par email :", error);
             throw error;
@@ -66,4 +63,7 @@ class UserModel {
 
 }
 
+
+
 module.exports = UserModel;
+db.query = util.promisify(db.query);

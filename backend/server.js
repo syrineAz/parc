@@ -79,4 +79,7 @@ app.use(DashboardRoutes)
 const ReservatinRoutes = require('./Routes/reservation/ReservationRoutes.js')
 app.use(ReservatinRoutes)
 
+const ReparationRoutes = require('./Routes/Reparation/ReparationRoutes.js')
+app.use(ReparationRoutes)
+
 app.get('/favicon.ico', (req, res) => res.status(204));

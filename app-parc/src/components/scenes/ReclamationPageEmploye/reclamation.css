@@ -114,17 +114,7 @@ h1{
     margin-top: 20px; 
 }
 
-.reclamation-item.en-attente {
-    background-color: lightblue; /* Couleur pour l'état "En attente" */
-}
 
-.reclamation-item.acceptee {
-    background-color: lightgreen; /* Couleur pour l'état "Acceptée" */
-}
-
-.reclamation-item.refusee {
-    background-color: lightcoral; /* Couleur pour l'état "Refusée" */
-}
 
 .etatAccepter{
     cursor: pointer;

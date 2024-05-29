@@ -131,13 +131,13 @@ io.on('connection', (socket) => {
     console.log('Client connected');
     
     socket.on('nouvelle_reservation_admin', (reservation) => {
-      console.log('Nouvelle réservation reçue :', reservation);
+     // console.log('Nouvelle réservation reçue :', reservation);
       const reservationId = reservation.reservationId; 
       
-      console.log('reservationId', reservationId)
+     // console.log('reservationId', reservationId)
       const reservationDataForAdmin = { ...reservation, reservationId, type:'reservation' };
       io.emit('nouvelle_reservation_admin', reservationDataForAdmin)
-      console.log(reservationDataForAdmin)
+    //  console.log(reservationDataForAdmin)
     });  
 });
   

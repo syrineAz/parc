@@ -19,36 +19,4 @@ function RoutesLogin() {
 }
 
 export default RoutesLogin
-/*import React from 'react'
-import { Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/scenes/dashboard/index'
-import Contacts from './components/scenes/contacts/index'
-import Invoices from './components/scenes/invoices/index'
-import Form from './components/scenes/form/index';
-import Bar from './components/scenes/bar/index'
-import Pie from './components/scenes/pie/index'
-import Line from './components/scenes/line/index'
-import FAQ from './components/scenes/faq/index';
-import Calendar from './components/scenes/calendar/calendar';
-import Geography from './components/scenes/geography/index'
-import Team from './components/scenes/team';
-function RoutesConfig() {
-  return (
-      <Routes>
-        <Route path="/Dashboard/*" element={<Dashboard />} />
-        <Route path="/Team" element={<Team />} />
-        <Route path="/Contacts" element={<Contacts />} />
-        <Route path="/Invoices" element={<Invoices />} />
-        <Route path="/Form" element={<Form />} />
-        <Route path="/Bar" element={<Bar />} />
-        <Route path="/Pie" element={<Pie />} />
-        <Route path="/Line" element={<Line />} />
-        <Route path="/FAQ" element={<FAQ />} />
-        <Route path="/Calendar" element={<Calendar />} />
-        <Route path="/Geography" element={<Geography />} />
-      </Routes>
-  )
-}
 
-export default RoutesConfig
-*/

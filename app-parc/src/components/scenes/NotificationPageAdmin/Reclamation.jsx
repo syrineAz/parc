@@ -1,21 +1,20 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { Edit } from '@mui/icons-material'
-import '../ReclamationPageEmploye/reclamation.css'
-import { Pagination } from '@mui/material'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import '../ReclamationPageEmploye/reclamation.css';
+import { Pagination, TextField, MenuItem } from '@mui/material';
 import { toast } from 'react-toastify';
+import '../ReclamationPageEmploye/reclamation.css';
 
 function Reclamation() {
   const [reclamations, setReclamations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState("");
-  const [reclamationPerPage]= useState(3)
-  const [currentPage, setCurrentPage]= useState(1)
-  
+  const [reclamationPerPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterState, setFilterState] = useState('');
+
   useEffect(() => {
     const fetchReclamations = async () => {
       try {
@@ -31,13 +30,14 @@ function Reclamation() {
 
     fetchReclamations();
   }, []);
-  
+
   const handleToggleDetails = (index) => {
     setReclamations(reclamations.map((reclamation, i) => (
       i === index ? { ...reclamation, showDetails: !reclamation.showDetails } : reclamation
     )));
-    console.log(reclamations)
+    console.log(reclamations);
   };
+
   if (loading) {
     return <p>Chargement...</p>;
   }
@@ -46,49 +46,57 @@ function Reclamation() {
     return <p>Erreur : {error}</p>;
   }
 
-
-  
   const updateReclamationStatus = (id, status) => {
     setReclamations(reclamations.map(r => r.id === id ? { ...r, status } : r));
   };
 
-  const handleAccept = async (id)=>{
-    try{
-      const response=  await axios.post('http://localhost:8081/AcceptReclamation', { id, status: 'acceptée' })
-      console.log(response.data)
-      toast.success('Acceptation envoyer ')
-      updateReclamationStatus(id, 'acceptée');    }
-    catch(error){
-      console.error(error)
-      toast.error("l'acceptation n'est pas envoyer ")
+  const handleAccept = async (id) => {
+    try {
+      const response = await axios.post('http://localhost:8081/AcceptReclamation', { id, status: 'acceptée' });
+      console.log(response.data);
+      toast.success('Acceptation envoyée');
+      updateReclamationStatus(id, 'acceptée');
+    } catch (error) {
+      console.error(error);
+      toast.error("L'acceptation n'a pas été envoyée");
     }
-  }
+  };
 
-  const handleRefuse = async(id)=>{
-    try{
-      const response = await axios.post('http://localhost:8081/RefusReclamation', { id, status: 'refusée' })
-      toast.success('Le refus est envoyé')
+  const handleRefuse = async (id) => {
+    try {
+      const response = await axios.post('http://localhost:8081/RefusReclamation', { id, status: 'refusée' });
+      toast.success('Le refus est envoyé');
       updateReclamationStatus(id, 'refusée');
+    } catch (error) {
+      console.error(error);
+      toast.error("Le refus n'a pas été envoyé");
     }
-    catch(error){
-      console.error(error)
-      toast.error("le refus n'est pas envoyer ")
-    }
-  }
-  const indexOfLastReclamation= currentPage * reclamationPerPage;
-  const indexOfFirstReclamation = indexOfLastReclamation-reclamationPerPage;
-  const currentReclamation= reclamations.slice(indexOfFirstReclamation,indexOfLastReclamation) 
-  
-  const paginate= (event,pageNumber) =>{
-    setCurrentPage(pageNumber)
-    resetShowDetails()
-  }
-  const resetShowDetails= ()=>{
+  };
+
+  const filteredReclamations = reclamations
+    .filter(reclamation => 
+      reclamation.nameUser.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter(reclamation => 
+      filterState === '' || reclamation.etat === filterState
+    );
+
+  const indexOfLastReclamation = currentPage * reclamationPerPage;
+  const indexOfFirstReclamation = indexOfLastReclamation - reclamationPerPage;
+  const currentReclamation = filteredReclamations.slice(indexOfFirstReclamation, indexOfLastReclamation);
+
+  const paginate = (event, pageNumber) => {
+    setCurrentPage(pageNumber);
+    resetShowDetails();
+  };
+
+  const resetShowDetails = () => {
     setReclamations(reclamations.map(reclamation => ({
-      ...reclamation, 
+      ...reclamation,
       showDetails: false
-    })))
-  }
+    })));
+  };
+
   const getReclamationClass = (etat) => {
     switch (etat) {
       case 'En attente':
@@ -100,10 +108,21 @@ function Reclamation() {
       default:
         return '';
     }
-  }
+  };
+
   return (
-      <div className="reclamation-container">
+    <div className="reclamation-container">
       <h1>Votre liste des réclamations</h1>
+      <div className="filters">
+        <TextField
+          label="Rechercher par nom"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ width: '300px' , height: '50px'}}  
+        />
+        
+      </div>
       <div className="reclamation-list">
         {currentReclamation.map((reclamation, index) => {
           const date = new Date(reclamation.date);
@@ -113,7 +132,7 @@ function Reclamation() {
           const formattedDate = `${day}-${month}-${year}`;
           return (
             <div key={index} className={`reclamation-item ${getReclamationClass(reclamation.etat)}`}>
-              <p  className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
+              <p className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
                 onClick={() => handleToggleDetails(index)}>
                 {reclamation.nameUser}
               </p>
@@ -130,10 +149,10 @@ function Reclamation() {
                   <p>Description de la panne: {reclamation.DescPanne}</p>
                   <p>Date: {formattedDate}</p>
                   {reclamation.etat === 'En attente' && (
-                  <>
-                    <button onClick={() => handleAccept(reclamation.id)}>Accepter</button>
-                    <button onClick={() => handleRefuse(reclamation.id)}>Refuser</button>
-                  </>
+                    <>
+                      <button onClick={() => handleAccept(reclamation.id)} className='etatAccepter'>Accepter</button>
+                      <button onClick={() => handleRefuse(reclamation.id)} className='etatRefuser'>Refuser</button>
+                    </>
                   )}
                   {reclamation.etat === 'acceptée' && <p>Statut: Acceptée</p>}
                   {reclamation.etat === 'refusée' && <p>Statut: Refusée</p>}
@@ -144,16 +163,16 @@ function Reclamation() {
         })}
       </div>
       <div className='paginationContainer'>
-      <Pagination
-         count={Math.ceil(reclamations.length / reclamationPerPage)}
-         page={currentPage}
-         onChange={paginate}
-         className="pagination-nav"
-      />
+        <Pagination
+          count={Math.ceil(filteredReclamations.length / reclamationPerPage)}
+          page={currentPage}
+          onChange={paginate}
+          className="pagination-nav"
+        />
       </div>
     </div>
   );
 }
 
-
 export default Reclamation;
+

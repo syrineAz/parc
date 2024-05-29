@@ -49,6 +49,7 @@ function Modifier() {
   if (!reservation) {
     return <div>Loading...</div>;               
   }
+  
   return (
     <Box m="20px">
       <Header title="Réserver équipement" />

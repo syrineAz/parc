@@ -2,7 +2,7 @@ const db= require('../db')
 const {io} = require('../server')
 
 const ReservationModel = {
-    addReservation: (values) => {
+   addReservation: (values) => {
       //console.log(values)
       return new Promise((resolve, reject) => {
         const insertReservationQuery = "INSERT INTO reservation (nameUser, nameEquipement, NumSerie, email, categorie, etat) VALUES (?, ?, ?, ?, ?, 'En attente')";
@@ -155,7 +155,6 @@ const ReservationModel = {
       });
     },
     
-
     refuseReservation: (id, status,callback) => {
       db.query('UPDATE reservation SET etat = ? WHERE id = ?', [status, id], (err, result) => {
         if (err) {

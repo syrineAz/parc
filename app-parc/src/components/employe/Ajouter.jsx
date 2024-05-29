@@ -2,14 +2,14 @@ import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
+import Header from "../components/Header";
 import axios from "axios";
 import { useState } from "react";
 import MenuItem from '@mui/material/MenuItem';
 import {Link, useNavigate} from "react-router-dom"
 import { toast } from 'react-toastify';
 
-const Form = () => {
+const Ajouter = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
     try {
@@ -24,7 +24,8 @@ const Form = () => {
             if (response.data === "user added succesfully") {
                 console.log(response.data);
                 setSubmitting(false);
-                navigate('/AppHome/Form/Users/:userid');
+                navigate('/User')
+                toast.success('Votre données est enregistrée dans la liste des employés')
             } else {
                 throw new Error("Unknown response from server");
             }
@@ -242,4 +243,4 @@ const initialValues = {
   actif:""
 };
 
-export default Form;
+export default Ajouter;

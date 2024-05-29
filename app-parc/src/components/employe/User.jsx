@@ -17,10 +17,15 @@ import Reservation from '../scenes/equipement/Reservation.jsx';
 import Modifier from '../scenes/ReclamationPageEmploye/Modifier.jsx';
 import ListeReservation from '../scenes/equipement/ListeReservation.jsx';
 import ModifierReservation from '../scenes/equipement/ModifierReservation.jsx';
+import Calendrier from '../scenes/Calendrien/Calendrier.jsx';
+import { useNavigate } from 'react-router-dom';
+import Reparation from '../scenes/reparation/Reparation.jsx';
+import Ajouter from './Ajouter.jsx';
 function User() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
   const [user, setUser] = useState("");
+  const navigate= useNavigate()
 
   useEffect(() => {
     const storedMode = localStorage.getItem('colorMode');
@@ -30,10 +35,16 @@ function User() {
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUser(userData);
     console.log(userData)
-  }, [toggleColorMode]);
+    if (!userData || userData.role !== 'employer') {
+      navigate('/Unauthorized'); // Rediriger si l'utilisateur n'est pas admin
+    }
+  }, [toggleColorMode, navigate]);
+
   const handleToggleSidebar = () => {
     setIsSidebar(!isSidebar);
   }; 
+ 
+ 
   return (
     <div>
        <ColorModeContext.Provider value={colorMode}>
@@ -48,22 +59,19 @@ function User() {
                 <Route path="/Reclamation/*" element={<Reclamation />} />
                 <Route path="/Reclamation/Envoyer" element={<Envoyer />} />
                 <Route path="/Reclamation/Modifier/:id" element={<Modifier />} />
-
+                <Route path="/Calendrier/*" element={<Calendrier />} />
                 <Route path="/Bar/*" element={<Bar />} />
                 <Route path="/Pie/*" element={<Pie />} />
                 <Route path="/Line/*" element={<Line />} />   
                 <Route path="/EquipementEmployes/*" element={<EquipementEmployes />} />   
                 <Route path="/ListeReservation/*" element={<ListeReservation />} />   
-                <Route path="/ListeReservation/ModifierReservation/:id" element={<ModifierReservation />} />   
+                <Route path="/ListeReservation/ModifierReservation/:id" element={<ModifierReservation />} />       
+                <Route path='/Categorie/*' element={<Categorie/>}/>
+                <Route path="/Categorie/:title/:id" element={<CardDetails />} />
+                <Route path='/Categorie/:title/:id/Reservation' element={<Reservation/>}/>
+                <Route path='/Reparation/*' element={<Reparation/>}/>
+                <Route path='/Ajouter/*' element={<Ajouter/>}/>
 
-                {user.role ==="employer"&&(       
-                <>
-                  <Route path='/Categorie/*' element={<Categorie/>}/>
-                  <Route path="/Categorie/:title/:id" element={<CardDetails />} />
-                  <Route path='/Categorie/:title/:id/Reservation' element={<Reservation/>}/>
-
-                </>
-                )} 
               </Routes>
             </main>
           </div> 

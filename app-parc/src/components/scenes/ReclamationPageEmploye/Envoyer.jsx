@@ -24,7 +24,7 @@ function Envoyer() {
       if(response.status===200){
         console.log(response.data);
         setSubmitting(false);
-       // navigate('/User/Reclamation')
+        navigate('/User/Reclamation')
         toast.success('Réclamation envoyée avec succès')
       }else {
         throw new Error("Unknown response from server");

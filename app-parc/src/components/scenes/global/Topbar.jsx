@@ -24,7 +24,8 @@ const Topbar = () => {
   const [anchorEl, setAnchorEl] = useState(null); 
   const [notificationAncorEl, setNotificationAncrolEl] = useState(null)
   const [notifications , setNotifications ] = useState([]);
-  
+  const [searchQuery, setSerachQuery]= useState('')
+  const [equipement , setEquipement]= useState(null)
 
   useEffect(()=>{
     socket.on('nouvelle_reclamation_admin',(notification)=>{
@@ -81,7 +82,7 @@ const Topbar = () => {
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
       >
-       {  /* <InputBase sx={{ ml: 10, flex: 1 }} placeholder="Search" />
+    {/*  <InputBase sx={{ ml: 10, flex: 1 }} placeholder="Search" />
       <IconButton type="button" sx={{ p: 1.5 }}>
           <SearchIcon /> 
        </IconButton> */}

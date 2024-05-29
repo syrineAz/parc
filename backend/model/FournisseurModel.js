@@ -77,6 +77,6 @@ const FournisseurModel = {
         });
       });
     }
-  };
+};
 
 module.exports= FournisseurModel ;

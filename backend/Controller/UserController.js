@@ -5,8 +5,49 @@ const path = require('path');
 const jwt=require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const salt = 10;
-
+let resetToken
+function CreateToken(req, res) {
+    const user = { Email: req.body.Email };
+    return new Promise((resolve, reject) => {
+        jwt.sign(user, secretKey, (err, resultat) => {
+            if (err) {
+                reject(err);
+            } else {
+              //console.log('Token créé avec succès :', resultat);
+                resolve(resultat);
+            }
+        });
+    });
+}
 const UserContoller= {
+    login : async (req, res) => {
+        const { email, password } = req.body;
+        UserModel.getUserByEmail(email, async (err, data) => {
+            if (err) {
+                console.error("Erreur lors de la requête SQL :", err);
+                return res.status(500).json({ error: "Erreur interne du serveur" });
+            }
+            if (data.length > 0) {
+                const user = data[0];
+                const hashedPassword = user.password;
+                const match = await bcrypt.compare(password, hashedPassword);
+                if (match) {
+                    try {
+                        const resetToken = await CreateToken(email);
+                        res.cookie('token', resetToken);
+                        return res.json({ success: true, userData: user });
+                    } catch (error) {
+                        return res.status(500).json({ error: "Erreur lors de la création du token" });
+                    }
+                } else {
+                    return res.json({ success: false, message: 'Identifiants incorrects' });
+                }
+            } else {
+                return res.json({ success: false, message: 'Identifiants incorrects' });
+            }
+        });
+    },
+
     signup: async(req,res)=>{
         try {
             const { name, email, password } = req.body;
@@ -101,19 +142,6 @@ const UserContoller= {
 }
 
 
-let resetToken
-function CreateToken(req, res) {
-    const user = { Email: req.body.Email };
-    return new Promise((resolve, reject) => {
-        jwt.sign(user, secretKey, (err, resultat) => {
-            if (err) {
-                reject(err);
-            } else {
-              //console.log('Token créé avec succès :', resultat);
-                resolve(resultat);
-            }
-        });
-    });
-}
+
 
 module.exports=UserContoller;

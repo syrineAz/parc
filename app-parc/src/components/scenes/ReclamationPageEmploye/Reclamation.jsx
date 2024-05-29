@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit } from '@mui/icons-material'
 import './reclamation.css'
-import { Pagination } from '@mui/material'
+import { Pagination ,TextField} from '@mui/material'
 import { toast } from 'react-toastify';
 
 function Reclamation() {
@@ -14,11 +14,14 @@ function Reclamation() {
   const [user, setUser] = useState("");
   const [reclamationPerPage]= useState(3)
   const [currentPage, setCurrentPage]= useState(1)
+  const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUser(userData);
     axios.get('http://localhost:8081/Affichereclamations')
       .then(response => {
+        console.log(response.data)
         setData(response.data);
       })
       .catch(error => {
@@ -30,6 +33,7 @@ function Reclamation() {
     if(user && user.email){
       const filtredReclamation = data.filter(reclamation=> reclamation.emailUser === user.email)
       setUserReclamation(filtredReclamation)
+      console.log(filtredReclamation)
     }
    
   },[data, user]) 
@@ -70,18 +74,7 @@ function Reclamation() {
       showDetails: false
     })))
   }
-  const getReclamationClass = (etat) => {
-    switch (etat) {
-      case 'En attente':
-        return 'en-attente';
-      case 'Acceptée':
-        return 'acceptee';
-      case 'Refusée':
-        return 'refusee';
-      default:
-        return '';
-    }
-  }
+ 
   return (
       <div className="reclamation-container">
         <Link to="/User/Reclamation/Envoyer" className="page-btnn">Envoyer une réclamation</Link>
@@ -94,7 +87,7 @@ function Reclamation() {
           const year = date.getFullYear();
           const formattedDate = `${day}-${month}-${year}`;
           return (
-            <div key={index} className={`reclamation-item ${getReclamationClass(reclamation.etat)}`}>
+            <div key={index} className="reclamation-item">
               <p  className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
                 onClick={() => handleToggleDetails(index)}>
                 {reclamation.nameUser}

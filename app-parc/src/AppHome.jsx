@@ -3,7 +3,7 @@ import { ColorModeContext, useMode } from './theme.js';
 import Topbar from './components/scenes/global/Topbar.jsx';
 import Sidebar from './components/scenes/global/Sidebar.jsx';
 import React from 'react';
-import {   Router, Routes, Route } from 'react-router-dom';
+import {   Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Dashboard from './components/scenes/dashboard/index';
 import Contacts from './components/scenes/contacts/index.jsx';
 import Form from './components/scenes/form/index.jsx';
@@ -25,7 +25,10 @@ import Ajouter from './components/scenes/EquipementEmployes/Ajouter.jsx';
 import Modifier from './components/scenes/EquipementEmployes/Modifier.jsx';
 import Reclamation from './components/scenes/NotificationPageAdmin/Reclamation.jsx';
 import Reservation from './components/scenes/reservationPageAdmin/Reservation.jsx';
-import ModalForm from './components/scenes/equipement/ModalForm.jsx';
+import Calendrier from './components/scenes/Calendrien/Calendrier.jsx';
+import Reparation from './components/scenes/reparation/Reparation.jsx'
+import Add from './components/scenes/reparation/Add.jsx';
+import EditReparation from './components/scenes/reparation/EditReparation.jsx';
 function AppHome() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -43,6 +46,11 @@ function AppHome() {
   const handleToggleSidebar = () => {
     setIsSidebar(!isSidebar);
   }; 
+  const navigate= useNavigate()
+  if (!user || user.role !== 'admin') {
+    navigate('/Unauthorized'); // Rediriger si l'utilisateur n'est pas admin
+    return null; // Ou afficher un message d'erreur, etc.
+  }
   return (
   <div>
     <ColorModeContext.Provider value={colorMode}>
@@ -54,15 +62,9 @@ function AppHome() {
               <Topbar setIsSidebar={handleToggleSidebar}  /> 
               <Routes>
                 <Route path="/*" element={<Dashboard />} />
-                {user.role === 'admin' && (
-                  <>
-                    <Route path='/Categorie' element={<Categorie/>} />
-                    <Route path="/Categorie/:title/:id" element={<CardDetails />} />
-                    <Route path='/Categorie/:title/:id/Equipement' element={<Equipement/>}/>
-
-                  </> 
-                )}
-                
+                <Route path='/Categorie' element={<Categorie/>} />
+                <Route path="/Categorie/:title/:id" element={<CardDetails />} />
+                <Route path='/Categorie/:title/:id/Equipement' element={<Equipement/>}/>          
                 <Route path="/Fournisseur/*" element={<Contacts />} />
                 <Route path="/Form/*" element={<Form />} />
                 <Route path="/Bar/*" element={<Bar />} />
@@ -74,12 +76,15 @@ function AppHome() {
                 <Route path="/Contacts/Fournisseur" element={<Fournisseur />} />
                 <Route path='/Contacts/Fournisseur/EditFournisseur/:userid' element={<EditFournisseur/>}/>   
                 <Route path='/Categorie/:title/:id/EditEquipement/:item_idEquipement' element={<EditEquipement/>} />
-
                 <Route path="/EquipementEmployes/*" element={<EquipementEmployes />} />
                 <Route path="/EquipementEmployes/Ajouter" element={<Ajouter />} />
                 <Route path="/EquipementEmployes/Modifier/:id" element={<Modifier />} />
                 <Route path="/Reclamation/*" element={<Reclamation />} />
                 <Route path="/Reservation/*" element={<Reservation />} />
+                <Route path="/Calendrier/*" element={<Calendrier />} />
+                <Route path="/Reparation/*" element={<Reparation />} />
+                <Route path="/Reparation/Add/*" element={<Add />} />
+                <Route path="/Reparation/EditReparation/:id" element={<EditReparation />} />
 
               </Routes>
             </main>
@@ -90,5 +95,4 @@ function AppHome() {
 );
 }
 export default AppHome
-/*<Route path="/Categorie/:title/:id" element={<CardDetails/>} />
-                <Route path='/Categorie/:title/:id/Equipement' element={<Equipement/>}/>*/
+

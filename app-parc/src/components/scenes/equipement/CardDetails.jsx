@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Edit, WavingHand } from '@mui/icons-material'
 import {BiBookAdd} from 'react-icons/bi'
 import { toast } from 'react-toastify';
-import { Pagination } from '@mui/material'
+import { Pagination ,TextField} from '@mui/material'
 
 function CardDetails() {
   const { title, id } = useParams();
@@ -20,14 +20,15 @@ function CardDetails() {
   const [formData, setFormData] = useState({});
   const [initialFields, setInitialFields] = useState({});
   const [additionalFields, setAdditionalFields] = useState(initialFields || []);
-
-  const filteredData = data.filter((item) => item.categorie === title);
   
+  const filteredData = data.filter((item) => item.categorie === title);
+ 
   useEffect (() =>{
     const fetchData = async ()=> {
         try{
             const response = await axios.get(`http://localhost:8081/ListeEquipement/${id}/${title}`)
             setData(response.data)
+            setfiltredEquipement(response.data);
             const initialFields = response.data.reduce((acc, item) => {
               acc[item.id] = [];
               return acc;
@@ -66,7 +67,7 @@ function CardDetails() {
    useEffect(()=>{
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUser(userData);
-   },[])
+  },[])
 
   const handleAddField = () => {
     setAdditionalFields(prevFields => [...prevFields, `Field${prevFields.length + 1}`]);
@@ -80,7 +81,6 @@ function CardDetails() {
   
       // Vérifier la réponse du backend
       if (response.status === 200) {
-        // Supprimer localement l'équipement de l'état (data)
         setData(prevData => prevData.filter(item => item.id !== idEquipement));
         toast.success('Équipement supprimé avec succès');
       } else {
@@ -118,6 +118,7 @@ function CardDetails() {
       <h1 className='titre'>
         Liste des équipements : {title}
       </h1>
+     
       <div>
       <table className='user-table'>
             <thead>
@@ -135,7 +136,7 @@ function CardDetails() {
               </tr>
             </thead>
             <tbody className='body'>
-              {currentItems.map((item) => (
+              {Array.isArray(filteredData) &&currentItems.map((item) => (
                 <tr key={item.idEquipement}>
                   <td>{item.idEquipement}</td>
                   <td>{item.NameEquipement}</td>

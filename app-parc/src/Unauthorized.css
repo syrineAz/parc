@@ -1,0 +1,27 @@
+.unauthorized-container {
+  max-width: 750px;
+  margin: auto;
+  padding: 200px;
+  text-align: center;
+}
+
+.unauthorized-container h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-top: 10px;
+}
+
+.unauthorized-container p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.unauthorized-container a {
+  color: #17487c;
+  text-decoration: none;
+}
+
+.unauthorized-container a:hover {
+  text-decoration: underline;
+}

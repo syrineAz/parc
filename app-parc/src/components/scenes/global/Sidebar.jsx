@@ -7,20 +7,14 @@ import { tokens } from "../../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import { faHouseLaptop } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from "react-router-dom";
 import EventIcon from '@mui/icons-material/Event'; // Import de l'icône Event
 import ReportIcon from '@mui/icons-material/Report'; // Import de l'icône Report
+import BuildIcon from '@mui/icons-material/Build';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -121,7 +115,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
 
                 </Typography>
                 <Typography variant="h3" color={colors.greenAccent[500]}>
-                   {currentUser.name}
+                  Welcome {currentUser.name} !
                 </Typography>
               </Box>
             </Box>
@@ -169,7 +163,13 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
                 className="pro-menu-item"
               />
             </SubMenu>
-           
+            <Item
+              title="Réparation"
+              to="/AppHome/Reparation"
+              icon={<BuildIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
             <Item
               title="Réclamation"
               to="/AppHome/Reclamation"
@@ -198,6 +198,14 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Item
+              title="Calendrier"
+              to="/AppHome/Calendrier"
+              icon={<EventIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -265,6 +273,13 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
                 className="pro-menu-item"
               />
             </SubMenu>
+            <Item
+              title="Réparation"
+              to="/User/Reparation"
+              icon={<BuildIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
              <Item
               title="Réclamation "
               to="/User/Reclamation"
@@ -279,7 +294,14 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
               icon={<EventIcon />}
               selected={selected}
               setSelected={setSelected}
-           />
+            />
+             <Item
+              title="Calendrier"
+              to="/User/Calendrier"
+              icon={<EventIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             
              <Typography

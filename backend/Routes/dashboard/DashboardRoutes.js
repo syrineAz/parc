@@ -3,31 +3,18 @@ const route = express.Router();
 const db = require('../../db')
 const DashboardController = require('../../Controller/DashboardController')
 
-route.get('/EmployeCount', (req, res)=>{
-    db.query('SELECT COUNT(*) AS total FROM user', (err, result)=>{
-        if(err){
-            console.error('erreur lors de comptage ', err)
-            res.status(500).json({ error: 'Erreur lors du comptage des employés.' })
-            return;
-        }
-        const employeCount= result[0].total
-        console.log(employeCount)
-        res.json({employeCount})
-    })
-})
-
-
-route.get('/fournisseurCount', (req, res)=>{
-    db.query('SELECT COUNT(*) AS total FROM fournisseur', (err, result)=>{
-        if(err){
-            console.error('erreur lors de comptage ', err)
-            res.status(500).json({ error: 'Erreur lors du comptage des fournisseurs.' })
-            return;
-        }
-        const fournisseurCount= result[0].total
-        console.log(fournisseurCount)
-        res.json({fournisseurCount})
-    })
-})
+route.get('/EmployeCount',DashboardController.getEmployeeCount )
+route.get('/fournisseurCount',DashboardController.getSupplierCount)
+route.get('/ReclamationCount' ,DashboardController.getReclamationCount)
+route.get('/ReservationCount', DashboardController.getReservationCount)
+route.get('/OrdinateursCount', DashboardController.getOrdinateurCount)
+route.get('/ReseauxCommunicationCount', DashboardController.getReseauxCommunicationCount)
+route.get('/PeripheriqueCount', DashboardController.getPeripheriqueCount)
+route.get('/ImprimanteCount', DashboardController.getImprimanteCount)
+route.get('/EcransCount', DashboardController.getEcransCount)
+route.get('/AccesoiresCount', DashboardController.getAccesoireCount)
+route.get('/AccesoiresCablageCount', DashboardController.getConnectiqueCount)
+route.get('/getAccounts', DashboardController.getAccount)
+route.get('/reparationCount', DashboardController.getReparation)
 
 module.exports = route;
