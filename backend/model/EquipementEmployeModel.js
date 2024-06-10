@@ -1,7 +1,7 @@
 const db = require('../db');
 
 const EquipementEmployeModel = {
-    addEquipementEmploye: (values) => {
+    /*addEquipementEmploye: (values) => {
       return new Promise((resolve, reject) => {
         const selectQuery = "SELECT * FROM equipement_employe WHERE numSerie = ?";
         db.query(selectQuery, [values[3]], (err, result) => {
@@ -25,8 +25,34 @@ const EquipementEmployeModel = {
           }
         });
       });
+    },*/
+    
+    addEquipementEmploye: (values) => {
+      return new Promise((resolve, reject) => {
+        const selectQuery = "SELECT * FROM equipement_employe WHERE numSerie = ?";
+        db.query(selectQuery, [values[3]], (err, result) => {
+          if (err) {
+            console.error(err);
+            reject("Error checking equipment existence");
+          } else {
+            if (result && result.length > 0) {
+              reject("Equipment deja affecter");
+            } else {
+              const sql = "INSERT INTO equipement_employe (nomEmploye, emailEmploye, equipementName, numSerie, categorie, idEmploye, idEquipement, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+              db.query(sql, values, (err, data) => {
+                if (err) {
+                  console.error(err);
+                  reject("Error adding equipment employee");
+                } else {
+                  resolve("Equipment employee added successfully");
+                }
+              });
+            }
+          }
+        });
+      });
     },
-  
+    
     getEquipementEmployeByUserId: (userId) => {
       return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM equipement_employe WHERE idEmploye = ?";

@@ -20,7 +20,7 @@ function CreateToken(req, res) {
     });
 }
 const UserContoller= {
-    login : async (req, res) => {
+    /*login : async (req, res) => {
         const { email, password } = req.body;
         UserModel.getUserByEmail(email, async (err, data) => {
             if (err) {
@@ -46,7 +46,32 @@ const UserContoller= {
                 return res.json({ success: false, message: 'Identifiants incorrects' });
             }
         });
+    },*/
+    login: async (req, res) => {
+        const { email, password } = req.body;
+        try {
+            const user = await UserModel.getUserByEmail(email);
+            console.log(user)
+            if (user.length > 0) {
+                const hashedPassword = user[0].password;
+                const match = await bcrypt.compare(password, hashedPassword);
+
+                if (match) {
+                    const resetToken = await CreateToken(email); // Créez un token ici
+                    res.cookie('token', resetToken); // Définissez le cookie avec le token
+                    return res.json({ success: true, userData: user[0] }); // Retournez les données de l'utilisateur
+                } else {
+                    return res.json({ success: false, message: 'Identifiants incorrects' });
+                }
+            } else {
+                return res.json({ success: false, message: 'Identifiants incorrects' });
+            }
+        } catch (error) {
+            console.error("Erreur lors de la connexion de l'utilisateur :", error);
+            return res.status(500).json({ error: "Erreur interne du serveur" });
+        }
     },
+    
 
     signup: async(req,res)=>{
         try {

@@ -20,12 +20,13 @@ class UserModel {
         try {
             const sql = "SELECT id, email, role, name, password FROM sign WHERE email = ?";
             const [results] = await db.query(sql, [email]);
-            return results;
+            return results; // Retourne un tableau de résultats
         } catch (error) {
             console.error("Erreur lors de la récupération de l'utilisateur par email :", error);
             throw error;
         }
     }
+    
 
     static async getUserForgetPassword(Email) {
         try {

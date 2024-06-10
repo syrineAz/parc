@@ -1,17 +1,61 @@
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
+import axios from "axios";
 import { tokens } from "../../theme";
-import { mockBarData as data } from "../data/mockData";
 
 const BarChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [barData, setBarData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const reclamationsResponse = await axios.get("http://localhost:8081/Affichereclamations");
+        const reclamationsData = Array.isArray(reclamationsResponse.data) ? reclamationsResponse.data : [];
+        // Function to format data
+        const formatData = (data) => {
+          const counts = data.reduce((acc, item) => {
+            const month = new Date(item.date).toLocaleString('default', { month: 'short', year: 'numeric' });
+            if (!acc[month]) {
+              acc[month] = 0;
+            }
+            acc[month]++;
+            return acc;
+          }, {});
+          return counts;
+        };
+
+        const reclamationsCounts = formatData(reclamationsData);
+
+        const allMonths = Array.from(new Set([...Object.keys(reclamationsCounts), ]));
+
+        const formattedData = allMonths.map((month) => ({
+          month,
+          reclamations: reclamationsCounts[month] || 0,
+        }));
+
+        setBarData(formattedData);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <ResponsiveBar
-      data={data}
+      data={barData}
+      keys={["reclamations"]}
+      indexBy="month"
+      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      padding={0.3}
+      valueScale={{ type: "linear" }}
+      indexScale={{ type: "band", round: true }}
+      colors={{ scheme: "nivo" }}
       theme={{
-        // added
         axis: {
           domain: {
             line: {
@@ -39,13 +83,6 @@ const BarChart = ({ isDashboard = false }) => {
           },
         },
       }}
-      keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]}
-      indexBy="country"
-      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-      padding={0.3}
-      valueScale={{ type: "linear" }}
-      indexScale={{ type: "band", round: true }}
-      colors={{ scheme: "nivo" }}
       defs={[
         {
           id: "dots",
@@ -76,7 +113,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "country", // changed
+        legend: isDashboard ? undefined : "Mois",
         legendPosition: "middle",
         legendOffset: 32,
       }}
@@ -84,7 +121,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "food", // changed
+        legend: isDashboard ? undefined : "Nombre",
         legendPosition: "middle",
         legendOffset: -40,
       }}
@@ -121,7 +158,7 @@ const BarChart = ({ isDashboard = false }) => {
       ]}
       role="application"
       barAriaLabel={function (e) {
-        return e.id + ": " + e.formattedValue + " in country: " + e.indexValue;
+        return e.id + ": " + e.formattedValue + " in month: " + e.indexValue;
       }}
     />
   );

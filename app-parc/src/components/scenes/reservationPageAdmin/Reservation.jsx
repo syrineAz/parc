@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Pagination,TextField } from '@mui/material';
+import { Pagination, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 import '../ReclamationPageEmploye/reclamation.css';
 
@@ -16,7 +16,11 @@ function Reservation() {
     const fetchReservations = async () => {
       try {
         const response = await axios.get('http://localhost:8081/AfficheReservation');
-        setReservation(response.data);
+        const reservationsWithDetails = response.data.map(res => ({
+          ...res,
+          showDetails: false,
+        }));
+        setReservation(reservationsWithDetails);
         setLoading(false);
       } catch (error) {
         console.error('Erreur lors de la récupération des réservations :', error);
@@ -35,7 +39,7 @@ function Reservation() {
   };
 
   const updateReservationStatus = (id, status) => {
-    setReservation(reservation.map(r => r.id === id ? { ...r, status } : r));
+    setReservation(reservation.map(r => r.id === id ? { ...r, etat: status } : r));
   };
 
   const handleAccept = async (id) => {
@@ -82,21 +86,21 @@ function Reservation() {
   return (
     <div className="reclamation-container">
       <h1>Liste des réservations</h1>
-      <div style={{ display: 'flex', justifyContent: 'left',marginBottom: '10px' , padding:'15px'}}>
+      <div style={{ display: 'flex', justifyContent: 'left', marginBottom: '10px', padding: '15px' }}>
         <TextField
           variant="outlined"
           label="Rechercher"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width: '300px' , height: '30px'}}  
+          sx={{ width: '300px', height: '30px' }}
         />
       </div>
       <div className="reclamation-list">
         {currentReservation.map((reservation, index) => (
-          <div key={index} className="reclamation-item">
+          <div key={reservation.id} className="reclamation-item">
             <p
-              className={`reclamation-title ${reservation.isClicked ? 'clicked' : ''}`}
-              onClick={() => handleToggleDetails(index)}
+              className={`reclamation-title ${reservation.showDetails ? 'clicked' : ''}`}
+              onClick={() => handleToggleDetails(indexOfFirstReservation + index)}
             >
               {reservation.nameUser}
             </p>
@@ -106,7 +110,7 @@ function Reservation() {
                 <p>Email: {reservation.email}</p>
                 <p>Numéro de série: {reservation.NumSerie}</p>
                 <p>Nom de l'équipement: {reservation.nameEquipement}</p>
-                <p>Catégorie: {reservation.categorie}</p>
+                <p>Catégorie: {reservation.categorie}</p><br />
                 {reservation.etat === 'En attente' && (
                   <>
                     <button onClick={() => handleAccept(reservation.id)} className="etatAccepter">Accepter</button>
@@ -133,5 +137,4 @@ function Reservation() {
 }
 
 export default Reservation;
-
 

@@ -104,7 +104,7 @@ const DashboardController={
       try {
         const accounts = await DashboardModel.getAccount();
         res.json({ accounts });
-       // console.log(AccesoiresCablageCount)
+      //  console.log(accounts)
       } catch (err) {
         console.error('Erreur lors de la récupération des comptes ', err);
         res.status(500).json({ error: 'Erreur lors du comptage des comptes.' });
@@ -120,5 +120,46 @@ const DashboardController={
         res.status(500).json({ error: 'Erreur lors du comptage des reparations.' });
       }
     },  
+    getAffectation: async (req, res) => {
+      try {
+        const affecterCount = await DashboardModel.getAffectation();
+        res.json({ affecterCount });
+       // console.log(AccesoiresCablageCount)
+      } catch (err) {
+        console.error('Erreur lors de la récupération des réparations ', err);
+        res.status(500).json({ error: 'Erreur lors du comptage des reparations.' });
+      }
+    },  
+    updateRole : async (req, res) => {
+      const { id, role } = req.body;
+      try {
+        await DashboardModel.updateRole(id, role); // Assuming DashboardModel handles database operations
+        res.status(200).json({ message: 'Role updated successfully' });
+      } catch (error) {
+        console.error('Error updating role:', error);
+        res.status(500).json({ error: 'Failed to update role' });
+      }
+    },
+    getAllEquipements: async (req, res) => {
+      try {
+        const equipement = await DashboardModel.getAllEquipementsByCategory();
+        res.json({ equipement });
+       // console.log(AccesoiresCablageCount)
+      } catch (err) {
+        console.error('Erreur lors de la récupération des réparations ', err);
+        res.status(500).json({ error: 'Erreur lors du comptage des reparations.' });
+      }
+    },  
+    getAllReparations: async (req, res) => {
+      try {
+          const reparations = await DashboardModel.getAllReparations();
+     //     console.log(reparations)
+          res.json(reparations);
+      } catch (error) {
+          console.error('Error in getAllReparations controller:', error);
+          res.status(500).send('Error fetching reparations');
+      }
+  },
+   
 }
 module.exports= DashboardController;

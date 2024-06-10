@@ -24,12 +24,6 @@ h1{
     justify-content: space-between;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-.reclamation-item:hover{
-    transform: scale(1.03);
-    background-color: whitesmoke;
-    border-color: #ddd; 
-
-}
   
 .reclamation-title {
     cursor: pointer;
@@ -68,9 +62,7 @@ h1{
     font-size: 15px;
     font-weight:550;
 }
-.reclamation-details p:hover{
-    transform: scale(1.05); 
-}
+
 .delete-btn {
     text-align: center;
     padding: 10px 15px; /* Adjusted padding for consistency */
@@ -123,6 +115,7 @@ h1{
     border: none;
     border-radius: 3px;
     font-size: 15px;
+    background-color:#45c4a2 ;
 }
 .etatAccepter:hover{
     transform: scale(1.05); 
@@ -136,6 +129,7 @@ h1{
     border: none;
     border-radius: 3px;
     font-size: 15px;
+    background-color:lightcoral ;
 }
 .etatRefuser:hover{
     transform: scale(1.05); 

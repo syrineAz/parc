@@ -3,7 +3,7 @@ const db = require('../db')
 const ReparationModel = {
     addReparation: (values) => {
         return new Promise((resolve, reject) => {
-          const sql = "INSERT INTO reparations (idEquipement, idEmploye, description, start_date, end_date, status, nameEquipement,numSerie, categorie,nomEmploye) VALUES (?,?, ?, ?, ?, ?, ?, ?,?,?)";
+          const sql = "INSERT INTO reparations (idEquipement, description, start_date, end_date, status, nameEquipement,numSerie, categorie,nomEmploye) VALUES (?,?, ?, ?, ?, ?, ?, ?,?)";
           db.query(sql, values, (err, result) => {
             if (err) {
               console.error(err);
@@ -16,10 +16,10 @@ const ReparationModel = {
     },
     updateReparation : (values, id) => {
       return new Promise((resolve, reject) => {
-          const sql = "UPDATE reparations SET `idEquipement` = ?, `idEmploye` = ?, `description` = ?, `start_date` = ?, `end_date` = ?, `status` = ?, `nameEquipement` = ?, `numSerie` = ?, `categorie` = ?, `nomEmploye` = ? WHERE `id` = ?";
+          const sql = "UPDATE reparations SET `idEquipement` = ?, `description` = ?, `start_date` = ?, `end_date` = ?, `status` = ?, `nameEquipement` = ?, `numSerie` = ?, `categorie` = ?, `nomEmploye` = ? WHERE `id` = ?";
           const updatedValues = [
               values.idEquipement,
-              values.idEmploye,
+              
               values.description,
               values.start_date,
               values.end_date,

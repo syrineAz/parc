@@ -83,7 +83,7 @@ function Envoyer() {
               name="nameUser"
               error={!!touched.nameUser && !!errors.nameUser}
               helperText={touched.nameUser && errors.nameUser}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             <TextField
               fullWidth
@@ -96,7 +96,7 @@ function Envoyer() {
               name="emailUser"
               error={!!touched.emailUser && !!errors.emailUser}
               helperText={touched.emailUser && errors.emailUser}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             <TextField
               fullWidth
@@ -109,7 +109,7 @@ function Envoyer() {
               name="numUser"
               error={!!touched.numUser && !!errors.numUser}
               helperText={touched.numUser && errors.numUser}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             
             <TextField
@@ -123,7 +123,7 @@ function Envoyer() {
               name="nameEquipement"
               error={!!touched.nameEquipement && !!errors.nameEquipement}
               helperText={touched.nameEquipement && errors.nameEquipement}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             <TextField
                 select 
@@ -137,7 +137,7 @@ function Envoyer() {
                 name="categorie"
                 error={!!touched.categorie && !!errors.categorie}
                 helperText={touched.categorie && errors.categorie}
-                sx={{ gridColumn: "span 4" }}>
+                sx={{ gridColumn: "span 2" }}>
                 <MenuItem value="Les Ordinateurs">Les Ordinateurs</MenuItem>
                 <MenuItem value="Réseaux et communication">Réseaux et communication</MenuItem>
                 <MenuItem value="Périphériques de stockage">Périphériques de stockage</MenuItem>
@@ -158,7 +158,7 @@ function Envoyer() {
               name="description"
               error={!!touched.description && !!errors.description}
               helperText={touched.description && errors.description}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
              <TextField
               fullWidth
@@ -171,7 +171,7 @@ function Envoyer() {
               name="date"
               error={!!touched.date && !!errors.date}
               helperText={touched.date && errors.date}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 1" }}
             />
             <TextField
               fullWidth
@@ -184,7 +184,7 @@ function Envoyer() {
               name="emplacement"
               error={!!touched.emplacement && !!errors.emplacement}
               helperText={touched.emplacement && errors.emplacement}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
              <TextField
                 select 
@@ -198,7 +198,7 @@ function Envoyer() {
                 name="priorite"
                 error={!!touched.priorite && !!errors.priorite}
                 helperText={touched.priorite && errors.priorite}
-                sx={{ gridColumn: "span 4" }}>
+                sx={{ gridColumn: "span " }}>
                 <MenuItem value="faible">faible</MenuItem>
                 <MenuItem value="moyenne">moyenne</MenuItem>
                 <MenuItem value="élevée">élevée</MenuItem>
@@ -219,7 +219,7 @@ function Envoyer() {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
-          <Box display="flex" justifyContent="end" mt="20px">
+          <Box display="flex" justifyContent="center" mt="20px">
             <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Envoyer Réclamation"}
             </Button>

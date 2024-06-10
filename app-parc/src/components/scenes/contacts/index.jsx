@@ -81,7 +81,7 @@ const Contacts = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
              
               <TextField
@@ -95,7 +95,7 @@ const Contacts = () => {
                 name="email"
                 error={!!touched.email && !!errors.email}
                 helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -108,7 +108,7 @@ const Contacts = () => {
                 name="num"
                 error={!!touched.num && !!errors.num}
                 helperText={touched.num && errors.num}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -121,7 +121,7 @@ const Contacts = () => {
                 name="cin"
                 error={!!touched.cin && !!errors.cin}
                 helperText={touched.cin && errors.cin}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
              
               <TextField
@@ -153,7 +153,7 @@ const Contacts = () => {
               
               
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="center" mt="20px">
               <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Create New User"}
               </Button>

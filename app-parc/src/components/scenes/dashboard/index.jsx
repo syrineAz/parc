@@ -1,7 +1,7 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../../theme";
 import { mockTransactions } from "../../data/mockData";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ReportIcon from '@mui/icons-material/Report'; // Import de l'icône Report
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -38,6 +38,19 @@ const Dashboard = () => {
   const [AccessoiresCount,setAccessoiresCount]= useState(0)
   const [AccesoiresCablageCount, setAccesoiresCablageCount]= useState(0)
   const [reparationCount, setReparationCount] = useState(0)
+  const [affecterCount, setAffecterCount] = useState(0)
+  useEffect(()=>{
+    const fetchaffectation= async()=>{
+      try{
+        const response = await axios.get('http://localhost:8081/affecterCount')
+        setAffecterCount(response.data.affecterCount)
+        //console.log(response.data.AccesoiresCablageCount)
+      }catch(error){
+        console.error('erreurs lors de la recuperation du nombrees réparations ', error)
+      }
+    }
+    fetchaffectation();
+  },[])
   useEffect(()=>{
     const fetchReparation= async()=>{
       try{
@@ -185,6 +198,9 @@ const Dashboard = () => {
     }
     fetchOridnateurs();
   },[])
+  
+  
+
   return (
     <Box m="20px" >
       {/* HEADER */}
@@ -434,6 +450,27 @@ const Dashboard = () => {
               />
             }
           />
+          
+        </Box>
+        <Box
+          gridColumn="span 3"
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <StatBox
+            title={affecterCount !== null ? affecterCount.toString() : 'Loading...'}
+            subtitle="Les équipements déjà affecter"
+            progress={affecterCount !== null ? affecterCount / 100 : 0}
+            increase=""
+            icon={
+              <CheckCircleIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              />
+            }
+          />
+          
         </Box>  
       </Box>
       <Box display="flex" gap="30px">
@@ -442,10 +479,9 @@ const Dashboard = () => {
         backgroundColor={colors.primary[400]}
         p="10px"
         mt={3}
-        maxHeight="500px"
+        maxHeight="400px"
         overflow="auto"
-        width="510px"  // Définir une largeur spécifique
-        
+        width="510px"  
       >
         <AccountsTable />
       </Box>
@@ -458,7 +494,7 @@ const Dashboard = () => {
           mt={3}
           maxHeight="500px"
           overflow="auto"
-          width="500px"  // Définir une largeur spécifique
+          width="500px"  
     
         >
           <EventList />

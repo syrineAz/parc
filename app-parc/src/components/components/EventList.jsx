@@ -12,7 +12,7 @@ const EventList = () => {
 
   return (
     <Box
-      backgroundColor="#f0f0f0"
+      backgroundColor=""
       p="15px"
       borderRadius="4px"
       flex="1 1 100%"

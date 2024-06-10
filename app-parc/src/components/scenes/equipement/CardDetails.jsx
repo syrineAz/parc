@@ -9,7 +9,10 @@ import { Edit, WavingHand } from '@mui/icons-material'
 import {BiBookAdd} from 'react-icons/bi'
 import { toast } from 'react-toastify';
 import { Pagination ,TextField} from '@mui/material'
-
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { tokens } from '../../../theme';
+import Header from '../../components/Header';
+import { useTheme } from '@mui/material';
 function CardDetails() {
   const { title, id } = useParams();
   const [data, setData] = useState([])
@@ -20,7 +23,8 @@ function CardDetails() {
   const [formData, setFormData] = useState({});
   const [initialFields, setInitialFields] = useState({});
   const [additionalFields, setAdditionalFields] = useState(initialFields || []);
-  
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const filteredData = data.filter((item) => item.categorie === title);
  
   useEffect (() =>{
@@ -28,7 +32,6 @@ function CardDetails() {
         try{
             const response = await axios.get(`http://localhost:8081/ListeEquipement/${id}/${title}`)
             setData(response.data)
-            setfiltredEquipement(response.data);
             const initialFields = response.data.reduce((acc, item) => {
               acc[item.id] = [];
               return acc;

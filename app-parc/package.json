@@ -12,6 +12,8 @@
     "parcel-build": "parcel build src/index.html"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -22,7 +24,7 @@
     "@fullcalendar/timegrid": "^6.1.11",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@mui/icons-material": "^5.15.11",
-    "@mui/material": "^5.15.11",
+    "@mui/material": "^5.15.19",
     "@mui/x-data-grid": "^6.19.6",
     "@nivo/bar": "^0.84.0",
     "@nivo/geo": "^0.84.0",
@@ -31,6 +33,7 @@
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.9.0",
     "formik": "^2.4.5",
@@ -42,6 +45,7 @@
     "react-pro-sidebar": "^0.7.1",
     "react-router-dom": "^6.22.2",
     "react-toastify": "^10.0.5",
+    "recharts": "^2.12.7",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.10.5",
     "web-vitals": "^3.5.2",

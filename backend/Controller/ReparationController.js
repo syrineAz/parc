@@ -4,7 +4,6 @@ const ReparationController ={
     addReparation: (req, res) => {
         const values = [
           req.body.idEquipement,
-          req.body.idEmploye,
           req.body.description,
           req.body.start_date,
           req.body.end_date	,

@@ -26,17 +26,20 @@ function ModalForm({ selectedItem, title,closeModal, additionalFields, setAdditi
 
   const handleAddCustomField = () => {
     if (customFieldName.trim() !== '') {
-      const isFieldExists= additionalFields.some(field=> field.name===customFieldName)
-      console.log(isFieldExists)
-      if(!isFieldExists){
-        const updatedFields= [...additionalFields]
-        updatedFields.push({name : customFieldName , value : customFieldValue})
-        setAdditionalFields(updatedFields);
-        setCustomFieldName('');
-        setCustomFieldValue('');
-        localStorage.setItem(`equipement_${selectedItem.idEquipement}`, JSON.stringify(updatedFields))
-      }else{
-        toast.error('Ce champ existe déjà  ')
+      if (additionalFields && Array.isArray(additionalFields)) {
+        const isFieldExists = additionalFields.some(field => field.name === customFieldName);
+        if (!isFieldExists) {
+          const updatedFields = [...additionalFields];
+          updatedFields.push({ name: customFieldName, value: customFieldValue });
+          setAdditionalFields(updatedFields);
+          setCustomFieldName('');
+          setCustomFieldValue('');
+          localStorage.setItem(`equipement_${selectedItem.idEquipement}`, JSON.stringify(updatedFields));
+        } else {
+          toast.error('Ce champ existe déjà');
+        }
+      } else {
+        toast.error('additionalFields n\'est pas défini ou n\'est pas un tableau');
       }
     }
   };

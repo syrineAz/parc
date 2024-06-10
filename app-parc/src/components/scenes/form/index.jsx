@@ -85,7 +85,7 @@ const Form = () => {
                 name="name"
                 error={!!touched.name && !!errors.name}
                 helperText={touched.name && errors.name}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
              
               <TextField
@@ -99,7 +99,7 @@ const Form = () => {
                 name="email"
                 error={!!touched.email && !!errors.email}
                 helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -112,7 +112,7 @@ const Form = () => {
                 name="num"
                 error={!!touched.num && !!errors.num}
                 helperText={touched.num && errors.num}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -125,7 +125,7 @@ const Form = () => {
                 name="cin"
                 error={!!touched.cin && !!errors.cin}
                 helperText={touched.cin && errors.cin}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -138,7 +138,7 @@ const Form = () => {
                 name="type"
                 error={!!touched.type && !!errors.type}
                 helperText={touched.type && errors.type}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -151,7 +151,7 @@ const Form = () => {
                 name="service"
                 error={!!touched.service && !!errors.service}
                 helperText={touched.service && errors.service}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -164,7 +164,7 @@ const Form = () => {
                 name="bureau"
                 error={!!touched.bureau && !!errors.bureau}
                 helperText={touched.bureau && errors.bureau}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 3" }}
               />
               <TextField
                 select 
@@ -178,7 +178,7 @@ const Form = () => {
                 name="actif"
                 error={!!touched.actif && !!errors.actif}
                 helperText={touched.actif && errors.actif}
-                sx={{ gridColumn: "span 4" }}>
+                sx={{ gridColumn: "span 1" }}>
                 <MenuItem value="oui">Oui</MenuItem>
                 <MenuItem value="non">Non</MenuItem>
               </TextField>

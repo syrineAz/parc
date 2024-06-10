@@ -4,26 +4,24 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import axios from "axios";
-import {  useParams } from "react-router-dom";
-import { toast } from "react-toastify" ;
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
 const Equipement = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { title, id } = useParams();
   const navigate = useNavigate();
 
   const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
-    //console.log("Form submitted with values: ", values);
     try {
       if (!values.NameEquipement || !values.NameFournisseur || !values.prix || !values.numSerie || !values.categorie) {
         setErrors({ form: 'All fields are required' });
         return;
       }
       const response = await axios.post("http://localhost:8081/equipement", values);
-      console.log("Response from backend: ", response);
       if (response.status === 200) {
         if (response.data === "equipement added succesfully") {
-          console.log("Equipement added successfully");
           setSubmitting(false);
           navigate(`/AppHome/Categorie/${title}/${id}`);
           toast.success('Équipement ajouté avec succès');
@@ -65,7 +63,7 @@ const Equipement = () => {
           <form onSubmit={handleSubmit}>
             <Box
               display="grid"
-              gap="30px"
+              gap="20px"
               gridTemplateColumns="repeat(4, minmax(0, 1fr))"
               sx={{
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
@@ -82,7 +80,7 @@ const Equipement = () => {
                 name="NameEquipement"
                 error={!!touched.NameEquipement && !!errors.NameEquipement}
                 helperText={touched.NameEquipement && errors.NameEquipement}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -95,7 +93,7 @@ const Equipement = () => {
                 name="numSerie"
                 error={!!touched.numSerie && !!errors.numSerie}
                 helperText={touched.numSerie && errors.numSerie}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -108,7 +106,7 @@ const Equipement = () => {
                 name="NameFournisseur"
                 error={!!touched.NameFournisseur && !!errors.NameFournisseur}
                 helperText={touched.NameFournisseur && errors.NameFournisseur}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 3" }}
               />
               <TextField
                 fullWidth
@@ -121,7 +119,7 @@ const Equipement = () => {
                 name="prix"
                 error={!!touched.prix && !!errors.prix}
                 helperText={touched.prix && errors.prix}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 1" }}
               />
               <TextField
                 fullWidth
@@ -134,7 +132,7 @@ const Equipement = () => {
                 name="Disponibilite"
                 error={!!touched.Disponibilite && !!errors.Disponibilite}
                 helperText={touched.Disponibilite && errors.Disponibilite}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 3" }}
               />
               <TextField
                 fullWidth
@@ -147,7 +145,7 @@ const Equipement = () => {
                 name="garantie"
                 error={!!touched.garantie && !!errors.garantie}
                 helperText={touched.garantie && errors.garantie}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 1" }}
               />
               <TextField
                 select
@@ -172,7 +170,7 @@ const Equipement = () => {
                 <MenuItem value="Accessoires de câblage et connectique">Accessoires de câblage et connectique</MenuItem>
               </TextField>
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="center" mt="20px">
               <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Créer Equipement"}
               </Button>
@@ -203,7 +201,7 @@ const initialValues = {
   categorie: "",
   numSerie: "",
 };
-
 export default Equipement;
+
 
 

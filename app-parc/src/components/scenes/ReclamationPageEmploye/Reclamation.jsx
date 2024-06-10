@@ -1,19 +1,18 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { Edit } from '@mui/icons-material'
-import './reclamation.css'
-import { Pagination ,TextField} from '@mui/material'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Edit } from '@mui/icons-material';
+import './reclamation.css';
+import { Pagination, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 
 function Reclamation() {
-  const [data, setData] = useState([])
-  const [userReclamation, setUserReclamation] = useState([])
+  const [data, setData] = useState([]);
+  const [userReclamation, setUserReclamation] = useState([]);
   const [user, setUser] = useState("");
-  const [reclamationPerPage]= useState(3)
-  const [currentPage, setCurrentPage]= useState(1)
+  const [reclamationPerPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -21,7 +20,7 @@ function Reclamation() {
     setUser(userData);
     axios.get('http://localhost:8081/Affichereclamations')
       .then(response => {
-        console.log(response.data)
+        console.log(response.data);
         setData(response.data);
       })
       .catch(error => {
@@ -29,56 +28,45 @@ function Reclamation() {
       });
   }, []);
 
-  useEffect(()=>{
-    if(user && user.email){
-      const filtredReclamation = data.filter(reclamation=> reclamation.emailUser === user.email)
-      setUserReclamation(filtredReclamation)
-      console.log(filtredReclamation)
+  useEffect(() => {
+    if (user && user.email) {
+      const filtredReclamation = data.filter(reclamation => reclamation.emailUser === user.email);
+      setUserReclamation(filtredReclamation);
     }
-   
-  },[data, user]) 
-  
+  }, [data, user]);
+
   const handleToggleDetails = (index) => {
     setUserReclamation(userReclamation.map((reclamation, i) => (
       i === index ? { ...reclamation, showDetails: !reclamation.showDetails } : reclamation
     )));
-    console.log(userReclamation)
   };
 
-  const handleDelete = async (id)=>{
-    try{
-      const response= await axios.delete(`http://localhost:8081/deleteReclamation/${id}`)
-      if( response.status===200){
-        const updateReclamations= userReclamation.filter(reclamation=>reclamation.id !== id)
-        setUserReclamation(updateReclamations)
-        toast.success('Réclamation suprrimée avec succès')
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:8081/deleteReclamation/${id}`);
+      if (response.status === 200) {
+        const updatedReclamations = userReclamation.filter(reclamation => reclamation.id !== id);
+        setUserReclamation(updatedReclamations);
+        toast.success('Réclamation supprimée avec succès');
       }
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
+  const indexOfLastReclamation = currentPage * reclamationPerPage;
+  const indexOfFirstReclamation = indexOfLastReclamation - reclamationPerPage;
+  const currentReclamation = userReclamation.slice(indexOfFirstReclamation, indexOfLastReclamation);
 
+  const paginate = (event, pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
-  const indexOfLastReclamation= currentPage * reclamationPerPage;
-  const indexOfFirstReclamation = indexOfLastReclamation-reclamationPerPage;
-  const currentReclamation= userReclamation.slice(indexOfFirstReclamation,indexOfLastReclamation) 
-  
-  const paginate= (event,pageNumber) =>{
-    setCurrentPage(pageNumber)
-    resetShowDetails()
-  }
-  const resetShowDetails= ()=>{
-    setUserReclamation(userReclamation.map(reclamation => ({
-      ...reclamation, 
-      showDetails: false
-    })))
-  }
- 
   return (
-      <div className="reclamation-container">
-        <Link to="/User/Reclamation/Envoyer" className="page-btnn">Envoyer une réclamation</Link>
+    <div className="reclamation-container">
+      <Link to="/User/Reclamation/Envoyer" className="page-btnn">Envoyer une réclamation</Link>
       <h1>Votre liste des réclamations</h1>
+    
       <div className="reclamation-list">
         {currentReclamation.map((reclamation, index) => {
           const date = new Date(reclamation.date);
@@ -88,8 +76,8 @@ function Reclamation() {
           const formattedDate = `${day}-${month}-${year}`;
           return (
             <div key={index} className="reclamation-item">
-              <p  className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
-                onClick={() => handleToggleDetails(index)}>
+              <p className={`reclamation-title ${reclamation.showDetails ? 'clicked' : ''}`}
+                onClick={() => handleToggleDetails(index + indexOfFirstReclamation)}>
                 {reclamation.nameUser}
               </p>
               {reclamation.showDetails && (
@@ -105,18 +93,16 @@ function Reclamation() {
                   <p>Description de la panne: {reclamation.DescPanne}</p>
                   <p>Date: {formattedDate}</p>
                   <p>Résultat: {reclamation.etat}</p> <br />
-                  {
-                  reclamation.etat ==='En attente' && (
+                  {reclamation.etat === 'En attente' && (
                     <>
                       <Link to={`/User/Reclamation/Modifier/${reclamation.id}`} className="edit-btn">
                         <Edit />
                       </Link>
                       <button onClick={() => handleDelete(reclamation.id)} className="delete-btn">
                         <DeleteIcon />
-                      </button> 
-                    </>  
-                  )
-                  } 
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -124,16 +110,15 @@ function Reclamation() {
         })}
       </div>
       <div className='paginationContainer'>
-      <Pagination
-         count={Math.ceil(userReclamation.length / reclamationPerPage)}
-         page={currentPage}
-         onChange={paginate}
-         className="pagination-nav"
-      />
+        <Pagination
+          count={Math.ceil(userReclamation.length / reclamationPerPage)}
+          page={currentPage}
+          onChange={paginate}
+          className="pagination-nav"
+        />
       </div>
     </div>
   );
 }
-
 
 export default Reclamation;

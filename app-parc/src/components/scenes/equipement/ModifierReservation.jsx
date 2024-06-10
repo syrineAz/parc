@@ -161,7 +161,7 @@ function Modifier() {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Create New User"}
+                {isSubmitting ? "Submitting..." : "Modifier réservation"}
               </Button>
             </Box>
           </form>

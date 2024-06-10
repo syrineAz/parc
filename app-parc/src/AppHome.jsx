@@ -33,7 +33,7 @@ function AppHome() {
   const [theme, colorMode ,toggleColorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
   const [user, setUser] = useState("");
-  useEffect(() => {
+ /* useEffect(() => {
     const storedMode = localStorage.getItem('colorMode');
     if (storedMode) {
       toggleColorMode();
@@ -43,14 +43,29 @@ function AppHome() {
     
   }, [toggleColorMode]);
 
-  const handleToggleSidebar = () => {
-    setIsSidebar(!isSidebar);
-  }; 
+ 
   const navigate= useNavigate()
   if (!user || user.role !== 'admin') {
     navigate('/Unauthorized'); // Rediriger si l'utilisateur n'est pas admin
     return null; // Ou afficher un message d'erreur, etc.
-  }
+  }*/
+   const handleToggleSidebar = () => {
+    setIsSidebar(!isSidebar);
+  }; 
+  const navigate = useNavigate();
+  useEffect(() => {
+    const storedMode = localStorage.getItem('colorMode');
+    if (storedMode) {
+      toggleColorMode();
+    }
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    setUser(userData);
+
+    // Vérifie si l'utilisateur est connecté et a le rôle d'admin
+    if (!userData || userData.role !== 'admin') {
+      navigate('/Unauthorized'); // Rediriger si l'utilisateur n'est pas admin
+    }
+  }, [toggleColorMode, navigate]);
   return (
   <div>
     <ColorModeContext.Provider value={colorMode}>

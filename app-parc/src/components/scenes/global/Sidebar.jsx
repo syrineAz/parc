@@ -72,7 +72,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: "10px 0 20px 0",
+              margin: "0 0 0 0",
               color: colors.grey[100],
             }}
           >
@@ -82,7 +82,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="15px"
+                ml=""
               >
                 <Typography variant="h3" color={colors.grey[100]}>
                   InfoParc Manager
@@ -98,11 +98,12 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
                 <img
-                  alt="Logo icar"
-                  width="200px"
-                  height="100px"
-                  src={`../../../public/ICAR.png`}
-                  style={{ cursor: "pointer", borderRadius: "10%" }}
+                  alt="Logo"
+                  width="210px"
+                  height="190px"
+                  src={`../../../public/info-parc.png`}
+                  style={{ cursor: "pointer", borderRadius: "20%", }}
+
                 />
               </Box>
               <Box textAlign="center">
@@ -114,7 +115,7 @@ const Sidebar = ({ setIsSidebar , currentUser}) => {
                 >
 
                 </Typography>
-                <Typography variant="h3" color={colors.greenAccent[500]}>
+                <Typography variant="h3"  color={colors.greenAccent[500]}>
                   Welcome {currentUser.name} !
                 </Typography>
               </Box>

@@ -61,7 +61,6 @@ function EditReparation() {
       onSubmit={handleFormSubmit}
       initialValues={{
         idEquipement: reparation.idEquipement || '',
-        idEmploye: reparation.idEmploye || '',
         description: reparation.description || '',
         start_date: formatDate(reparation.start_date) || '',
         end_date: formatDate(reparation.end_date) || '',
@@ -92,7 +91,7 @@ function EditReparation() {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
-          <TextField
+            <TextField
               fullWidth
               variant="filled"
               type="text"
@@ -103,23 +102,11 @@ function EditReparation() {
               name="idEquipement"
               error={!!touched.idEquipement && !!errors.idEquipement}
               helperText={touched.idEquipement && errors.idEquipement}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 1" }}
             />
            
+            
             <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              label="Id de l'employé"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.idEmploye}
-              name="idEmploye"
-              error={!!touched.idEmploye && !!errors.idEmploye}
-              helperText={touched.idEmploye && errors.idEmploye}
-              sx={{ gridColumn: "span 4" }}
-            />
-             <TextField
               fullWidth
               variant="filled"
               type="text"
@@ -130,7 +117,7 @@ function EditReparation() {
               name="nameEquipement"
               error={!!touched.nameEquipement && !!errors.nameEquipement}
               helperText={touched.nameEquipement && errors.nameEquipement}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             <TextField
               fullWidth
@@ -143,7 +130,7 @@ function EditReparation() {
               name="numSerie"
               error={!!touched.numSerie && !!errors.numSerie}
               helperText={touched.numSerie && errors.numSerie}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 1" }}
             />
             <TextField
               fullWidth
@@ -185,7 +172,7 @@ function EditReparation() {
               name="start_date"
               error={!!touched.start_date && !!errors.start_date}
               helperText={touched.start_date && errors.start_date}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
             <TextField
               fullWidth
@@ -198,7 +185,7 @@ function EditReparation() {
               name="end_date"
               error={!!touched.end_date && !!errors.end_date}
               helperText={touched.end_date && errors.end_date}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 2" }}
             />
               <TextField
                 select
@@ -212,7 +199,7 @@ function EditReparation() {
                 name="categorie"
                 error={!!touched.categorie && !!errors.categorie}
                 helperText={touched.categorie && errors.categorie}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               >
                 <MenuItem value="Les Ordinateurs">Les Ordinateurs </MenuItem>
                 <MenuItem value="Réseaux et communication">Réseaux et communication</MenuItem>
@@ -234,7 +221,7 @@ function EditReparation() {
               name="status"
               error={!!touched.status && !!errors.status}
               helperText={touched.status && errors.status}
-              sx={{ gridColumn: "span 4" }}>
+              sx={{ gridColumn: "span 2" }}>
               <MenuItem value="En attente">En attente</MenuItem>
               <MenuItem value="En cours">En cours</MenuItem>
               <MenuItem value="Terminer">Termier</MenuItem>
@@ -242,9 +229,9 @@ function EditReparation() {
             </TextField>
             
           </Box>
-          <Box display="flex" justifyContent="end" mt="20px">
+          <Box display="flex" justifyContent="center" mt="20px">
             <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Modifier réparation"}
+              {isSubmitting ? "Submitting..." : "Créer réparation"}
             </Button>
           </Box>
         </form>
@@ -258,7 +245,6 @@ function EditReparation() {
 
 const checkoutSchema = yup.object().shape({
     idEquipement: yup.string().required("required"),
-    idEmploye: yup.string().required("required"),
     description: yup.string().required("required"),
     start_date: yup.date().required("required"),
     end_date: yup.date().required("required"),  

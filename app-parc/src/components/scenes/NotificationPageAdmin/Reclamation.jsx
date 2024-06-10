@@ -1,15 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import '../ReclamationPageEmploye/reclamation.css';
-import { Pagination, TextField, MenuItem } from '@mui/material';
+import axios from 'axios';import React, { useEffect, useState } from 'react';
+import { Pagination, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 import '../ReclamationPageEmploye/reclamation.css';
+import { Box, Card, CardContent, CardActions, Button } from '@mui/material';
 
 function Reclamation() {
   const [reclamations, setReclamations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [user, setUser] = useState("");
   const [reclamationPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,7 +17,11 @@ function Reclamation() {
     const fetchReclamations = async () => {
       try {
         const response = await axios.get('http://localhost:8081/Affichereclamations');
-        setReclamations(response.data);
+        const reclamationsWithDetails = response.data.map(reclamation => ({
+          ...reclamation,
+          showDetails: false,
+        }));
+        setReclamations(reclamationsWithDetails);
         setLoading(false);
       } catch (error) {
         console.error('Erreur lors de la récupération des réclamations :', error);
@@ -32,10 +34,9 @@ function Reclamation() {
   }, []);
 
   const handleToggleDetails = (index) => {
-    setReclamations(reclamations.map((reclamation, i) => (
+    setReclamations(prevReclamations => prevReclamations.map((reclamation, i) => (
       i === index ? { ...reclamation, showDetails: !reclamation.showDetails } : reclamation
     )));
-    console.log(reclamations);
   };
 
   if (loading) {
@@ -47,7 +48,7 @@ function Reclamation() {
   }
 
   const updateReclamationStatus = (id, status) => {
-    setReclamations(reclamations.map(r => r.id === id ? { ...r, status } : r));
+    setReclamations(reclamations.map(r => r.id === id ? { ...r, etat: status } : r));
   };
 
   const handleAccept = async (id) => {
@@ -101,9 +102,9 @@ function Reclamation() {
     switch (etat) {
       case 'En attente':
         return 'en-attente';
-      case 'Acceptée':
+      case 'acceptée':
         return 'acceptee';
-      case 'Refusée':
+      case 'refusée':
         return 'refusee';
       default:
         return '';
@@ -119,9 +120,8 @@ function Reclamation() {
           variant="outlined"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width: '300px' , height: '50px'}}  
+          sx={{ width: '300px', height: '60px' }}  
         />
-        
       </div>
       <div className="reclamation-list">
         {currentReclamation.map((reclamation, index) => {
@@ -130,10 +130,13 @@ function Reclamation() {
           const month = date.getMonth() + 1;
           const year = date.getFullYear();
           const formattedDate = `${day}-${month}-${year}`;
+          const globalIndex = indexOfFirstReclamation + index;
           return (
-            <div key={index} className={`reclamation-item ${getReclamationClass(reclamation.etat)}`}>
-              <p className={`reclamation-title ${reclamation.isClicked ? 'clicked' : ''}`}
-                onClick={() => handleToggleDetails(index)}>
+            <div key={reclamation.id} className={`reclamation-item ${getReclamationClass(reclamation.etat)}`}>
+              <p
+                className={`reclamation-title ${reclamation.showDetails ? 'clicked' : ''}`}
+                onClick={() => handleToggleDetails(globalIndex)}
+              >
                 {reclamation.nameUser}
               </p>
               {reclamation.showDetails && (
@@ -162,7 +165,7 @@ function Reclamation() {
           );
         })}
       </div>
-      <div className='paginationContainer'>
+      <div className="paginationContainer">
         <Pagination
           count={Math.ceil(filteredReclamations.length / reclamationPerPage)}
           page={currentPage}

@@ -16,5 +16,8 @@ route.get('/AccesoiresCount', DashboardController.getAccesoireCount)
 route.get('/AccesoiresCablageCount', DashboardController.getConnectiqueCount)
 route.get('/getAccounts', DashboardController.getAccount)
 route.get('/reparationCount', DashboardController.getReparation)
-
+route.post('/updateRole', DashboardController.updateRole)
+route.get('/affecterCount', DashboardController.getAffectation)
+route.get('/getAllEquipement', DashboardController.getAllEquipements)
+route.get('/getAllReparations', DashboardController.getAllReparations)
 module.exports = route;

@@ -162,10 +162,24 @@ const DashboardModel={
          //   console.log("ConnectiqueCount",AccesoiresCablageCount)
           });
       });
-  },
+    },
+    getAffectation: async()=>{
+      return new Promise((resolve, reject) => {
+          db.query("SELECT COUNT(*) AS total FROM equipement_employe ", (err, result) => {
+            if (err) {
+              console.error('Erreur lors du comptage des reparations   ', err);
+              reject(err);
+              return;
+            }
+            const reparationCount = result[0].total;
+            resolve(reparationCount);
+         //   console.log("ConnectiqueCount",AccesoiresCablageCount)
+          });
+      });
+    },
     getAccount : async ()=>{
       return new Promise((resolve, reject) => {
-        const sql = "SELECT id, name,email, role FROM sign WHERE role = 'employer' ";
+        const sql = "SELECT id, name,email, role FROM sign  ";
         db.query(sql, (err, result) => {
           if (err) {
             console.error(err);
@@ -175,6 +189,53 @@ const DashboardModel={
           }
         });
       });
-    }
+    },
+  
+    updateRole: async (id, role) => {
+      return new Promise((resolve, reject) => {
+        const query = 'UPDATE sign SET role = ? WHERE id = ?';
+        const values = [role, id]; // Values array for placeholders in query
+    
+        db.query(query, values, (err, result) => {
+          if (err) {
+            console.error(err);
+            reject("Error updating role"); // Reject with an appropriate error message
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    },
+    getAllEquipementsByCategory :async () => {
+      return new Promise((resolve, reject) => {
+        const sql = "SELECT categorie, COUNT(*) AS count FROM equipement GROUP BY categorie"; // Requête SQL pour récupérer les équipements groupés par catégorie
+        db.query(sql, (err, results) => {
+          if (err) {
+            console.error('Erreur lors de la récupération des équipements par catégorie :', err);
+            reject('Erreur lors de la récupération des équipements par catégorie');
+          } else {
+            resolve(results); // Renvoie les résultats de la requête SQL (tableau d'objets { category, count })
+          }
+        });
+      });
+    },
+    getAllReparations: async () => {
+      return new Promise((resolve, reject) => {
+          const query = `
+              SELECT * FROM reparations
+              WHERE status IN ('En cours', 'En attente', 'Terminer')
+              ORDER BY start_date ASC;`;
+
+          db.query(query, (err, results) => {
+              if (err) {
+                  console.error('Error fetching reparations:', err);
+                  reject('Error fetching reparations');
+              }
+              resolve(results);
+          });
+      });
+  },
 }
 module.exports= DashboardModel;
+
+

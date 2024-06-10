@@ -18,12 +18,12 @@ function Ajouter() {
   const handleFormSubmit = async (values, { setErrors, setSubmitting }) => {
     try {
         if (!values.idEquipement || !values.idEmploye || !values.nomEmploye || !values.emailEmploye || !values.equipementName || !values.numSerie ||!values.categorie || !values.date) {
-            setErrors({ form: 'All fields are required' });
-            return;
+          setErrors({ form: 'All fields are required' });
+          return;
         }
 
         const response = await axios.post("http://localhost:8081/Ajouter", values);
-        console.log(response)
+        console.log(response.data)
         if (response.status === 200) {
             if (response.data === "equipement added succesfully") {
               console.log(response.data);
@@ -86,7 +86,7 @@ function Ajouter() {
    
   return (
     <Box m="20px"  >
-      <Header title="Ajouter un equipement"  />
+      <Header title="Affecter un equipement"  />
       <Box display="flex" style={{ display: 'flex', alignItems: 'center' }}>
         
       </Box>
@@ -125,7 +125,7 @@ function Ajouter() {
                 name="idEquipement"
                 error={!!touched.idEquipement && !!errors.idEquipement}
                 helperText={touched.idEquipement && errors.idEquipement}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -138,7 +138,7 @@ function Ajouter() {
                 name="idEmploye"
                 error={!!touched.idEmploye && !!errors.idEmploye}
                 helperText={touched.idEmploye && errors.idEmploye}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
              <TextField
                 fullWidth
@@ -151,7 +151,7 @@ function Ajouter() {
                 name="nomEmploye"
                 error={!!touched.nomEmploye && !!errors.nomEmploye}
                 helperText={touched.nomEmploye && errors.nomEmploye}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
                <TextField
                 fullWidth
@@ -164,7 +164,7 @@ function Ajouter() {
                 name="emailEmploye"
                 error={!!touched.emailEmploye && !!errors.emailEmploye}
                 helperText={touched.emailEmploye && errors.emailEmploye}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
               <TextField
                 fullWidth
@@ -177,7 +177,7 @@ function Ajouter() {
                 name="equipementName"
                 error={!!touched.equipementName && !!errors.equipementName}
                 helperText={touched.equipementName && errors.equipementName}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 3" }}
               />
              <TextField
                 fullWidth
@@ -190,7 +190,7 @@ function Ajouter() {
                 name="numSerie"
                 error={!!touched.numSerie && !!errors.numSerie}
                 helperText={touched.numSerie && errors.numSerie}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 1" }}
               />
                <TextField
                 fullWidth
@@ -203,7 +203,7 @@ function Ajouter() {
                 name="date"
                 error={!!touched.date && !!errors.date}
                 helperText={touched.date && errors.date}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ gridColumn: "span 2" }}
               />
              
               <TextField
@@ -218,7 +218,7 @@ function Ajouter() {
                 name="categorie"
                 error={!!touched.categorie && !!errors.categorie}
                 helperText={touched.categorie && errors.categorie}
-                sx={{ gridColumn: "span 4" }}> 
+                sx={{ gridColumn: "span 2" }}> 
                 <MenuItem value="Les Ordinateurs">Les Ordinateurs </MenuItem>
                 <MenuItem value="Réseaux et communication">Réseaux et communication</MenuItem>
                 <MenuItem value="Périphériques de stockage">Périphériques de stockage</MenuItem>
@@ -228,9 +228,9 @@ function Ajouter() {
                 <MenuItem value="Accessoires de câblage et connectique">Accessoires de câblage et connectique</MenuItem>
               </TextField>
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box display="flex" justifyContent="center" mt="20px">
               <Button type="submit" color="secondary" variant="contained" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Create New Equipement"}
+                {isSubmitting ? "Submitting..." : "Affecter équipement"}
               </Button>
             </Box>
           </form>
